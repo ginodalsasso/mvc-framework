@@ -1,0 +1,15 @@
+RewriteEngine On
+
+# Vérifie si le fichier n'existe pas
+RewriteCond %{REQUEST_FILENAME} !-f
+
+# Vérifie si le répertoire n'existe pas
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Rediriger tout le reste vers la page index.php
+RewriteRule ^(.*)$ index.php?url=$1 [L,QSA]
+
+# ^(.*)$ : Capture toute l'URL
+# index.php?url=$1 : Redirige vers index.php en ajoutant l'URL capturée comme paramètre "url"
+# [L] : Indique que c'est la dernière règle si elle est appliquée
+# [QSA] : Conserve les paramètres GET originaux dans l'URL 
