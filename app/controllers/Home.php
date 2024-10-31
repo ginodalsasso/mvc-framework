@@ -5,10 +5,9 @@
         public function index() {
 
             $model = new Model;
-            $arr['id'] = 1;
-            $arr['name'] = "John";
+            $arr['name'] = 'Mary';
             
-            $result = $model->where($arr);
+            $result = $model->update(2, $arr);
             show($result);
 
             $this->view("home");

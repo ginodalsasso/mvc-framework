@@ -8,6 +8,8 @@
         protected $limit = 10;
         protected $offset = 0;
         
+
+        // requête SELECT sur la table spécifiée avec des conditions WHERE.
         public function where($data, $data_not = []) {
 
             $keys = array_keys($data);
@@ -30,7 +32,10 @@
             return $this->query($query, $data);
         }
 
-        public function first($data, $data_not) {
+
+        // requête SELECT sur la table spécifiée avec des conditions WHERE et LIMIT.
+        public function first($data, $data_not = []) {
+
             $keys = array_keys($data);
             $keys_not = array_keys($data_not);
             $query= "SELECT * FROM $this->table WHERE ";
@@ -56,15 +61,43 @@
             return false;
         }
 
+
         public function insert($data) {
+
+            $keys = array_keys($data);
+
+            $query= "INSERT INTO $this->table (".implode(",", $keys).") VALUES (:".implode(",:", $keys).")"; //VALUES (:name, :date)
+            $this->query($query, $data);
             
+            return false;
         }
+
 
         public function update($id, $data, $id_column = 'id') {
+
+            $keys = array_keys($data);
+            $query= "UPDATE $this->table SET ";
+
+            // pour chaque clé dans le tableau de données
+            foreach($keys as $key) {
+                $query .= $key . " = :" . $key . ", ";
+            }
+
+            $query = trim($query, ", "); // on enlève le dernier ", "
+            $query .= " WHERE $id_column = :$id_column"; // on ajoute la condition WHERE
             
+            $data[$id_column] = $id;
+            $this->query($query, $data);
+            return false;
         }
 
+
         public function delete($id, $id_column = 'id') {
-            
+
+            $data[$id_column] = $id;
+            $query= "DELETE FROM $this->table WHERE $id_column = :$id_column";
+            $this->query($query, $data);
+
+            return false;
         }
     }
