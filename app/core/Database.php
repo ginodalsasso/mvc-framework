@@ -17,9 +17,9 @@
             $check = $stmt->execute($data);
             // si la requête est un succès
             if($check) {
-                $result =  $stmt->fetchAll(PDO::FETCH_OBJ); 
+                $result = $stmt->fetchAll(PDO::FETCH_OBJ); 
                 // si le résultat est un tableau et qu'il contient des données
-                if(is_array($check) && count($check)){
+                if(is_array($result) && count($result)) {
                     return $result;
                 }
             }
