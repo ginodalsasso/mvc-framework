@@ -1,5 +1,7 @@
 <?php 
 
+    // ici on inclut tous les fichiers nécessaires à l'application
+    
     require "config.php";
     require "functions.php";
     require "Database.php";

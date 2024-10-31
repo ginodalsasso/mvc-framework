@@ -3,7 +3,14 @@
     class Home extends Controller {
 
         public function index() {
-            echo "This is the index method of the Home controller";
+
+            $model = new Model;
+            $arr['id'] = 1;
+            $arr['name'] = "John";
+            
+            $result = $model->where($arr);
+            show($result);
+
             $this->view("home");
         }
 
