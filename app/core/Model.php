@@ -99,6 +99,17 @@ Trait Model {
 
     // Méthode pour insérer un nouvel enregistrement dans la table
     public function insert($data) {
+        
+        // Vérifie si la propriété allowedColumns est définie et non vide
+        if (!empty($this->allowedColumns)) {
+            // Parcourt chaque clé (colonne) et valeur du tableau $data
+            foreach ($data as $key => $value) {
+                // Si la clé n'est pas dans allowedColumns, elle est supprimée de $data
+                if (!in_array($key, $this->allowedColumns)) {
+                    unset($data[$key]);
+                }
+            }
+        }
 
         // Récupération des clés du tableau de données
         $keys = array_keys($data);
@@ -115,6 +126,17 @@ Trait Model {
 
     // Méthode pour mettre à jour un enregistrement existant
     public function update($id, $data, $id_column = 'id') {
+        
+        // Vérifie si la propriété allowedColumns est définie et non vide
+        if (!empty($this->allowedColumns)) {
+            // Parcourt chaque clé (colonne) et valeur du tableau $data
+            foreach ($data as $key => $value) {
+                // Si la clé n'est pas dans allowedColumns, elle est supprimée de $data
+                if (!in_array($key, $this->allowedColumns)) {
+                    unset($data[$key]);
+                }
+            }
+        }
 
         // Récupération des clés du tableau de données
         $keys = array_keys($data);
