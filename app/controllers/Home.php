@@ -4,10 +4,10 @@
 
         public function index() {
 
-            $model = new Model;
-            $arr['name'] = 'Mary';
+            $user = new User;
             
-            $result = $model->update(2, $arr);
+            $result = $user->findAll();
+
             show($result);
 
             $this->view("home");
