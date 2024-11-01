@@ -1,6 +1,6 @@
 <?php
 
-    class Controller {
+    Trait Controller {
         
         // Méthode permettant de charger une vue
         public function view($name){

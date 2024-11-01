@@ -11,7 +11,7 @@ class App {
      */
     private function splitURL() {
         $URL = $_GET['url'] ?? 'home'; // Si 'url' est absent dans la requête, 'home' est utilisé par défaut
-        $URL = explode('/', $URL); // Convertit la chaîne en tableau en séparant les éléments par "/"
+        $URL = explode('/', trim($URL,"/")); // Convertit la chaîne en tableau en séparant les éléments par "/"
         return $URL;
     }
 
@@ -28,6 +28,7 @@ class App {
         if (file_exists($filename)) {
             require $filename; // Inclut le fichier du contrôleur
             $this->controller = ucfirst($URL[0]); // Définit le nom du contrôleur d'après l'URL
+            unset($URL[0]); // Supprime le premier élément du tableau
         } else {
             // Si le fichier du contrôleur n'existe pas, cherche dans un sous-dossier
             $filename = "../app/controllers/" . ucfirst($URL[0]) . "/" . ucfirst($URL[0]) . ".php";
@@ -44,7 +45,15 @@ class App {
         // Instancie dynamiquement la classe contrôleur
         $controller = new $this->controller; 
 
+        // Vérifie si la méthode spécifiée dans l'URL existe
+        if(!empty($URL[1])){
+            if(method_exists($controller, $URL[1])){
+                $this->method = $URL[1]; 
+                unset($URL[1]);
+            }
+        }
+
         // Appelle dynamiquement la méthode spécifiée (index par défaut) sur le contrôleur
-        call_user_func_array([$controller, $this->method], []); 
+        call_user_func_array([$controller, $this->method], $URL); 
     }
 }
