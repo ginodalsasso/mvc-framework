@@ -1,19 +1,18 @@
 <!doctype html>
-<html lang="en" class="h-100" data-bs-theme="auto">
+<html lang="en" data-bs-theme="auto">
 
 <head>
+    <script src="../assets/js/color-modes.js"></script>
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
-    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.122.0">
-    <title>Cover Template · Bootstrap v5.3</title>
-
+    <title>Signin Template · Bootstrap v5.3</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
 
-    <link href="<?=ROOT?>/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="<?= ROOT ?>/assets/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
         .bd-placeholder-img {
@@ -96,36 +95,44 @@
 
 
     <!-- Custom styles for this template -->
-    <link href="<?ROOT?>/assets/css/cover.css" rel="stylesheet">
+    <link href="<?= ROOT ?>/assets/css/sign-in.css" rel="stylesheet">
 </head>
 
-<body class="d-flex h-100 text-center text-bg-dark">
+<body class="d-flex align-items-center py-4 bg-body-tertiary">
+    <main class="form-signin w-100 m-auto">
+        <form method="POST">
 
-    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
-        <header class="mb-auto">
-            <div>
-                <h3 class="float-md-start mb-0">Cover</h3>
-                <nav class="nav nav-masthead justify-content-center float-md-end">
-                    <a class="nav-link fw-bold py-1 px-0 active" aria-current="page" href="<?=ROOT?>">Home</a>
-                    <a class="nav-link fw-bold py-1 px-0" href="<?=ROOT?>/login">Login</a>
-                    <a class="nav-link fw-bold py-1 px-0" href="<?=ROOT?>/logout">Logout</a>
-                </nav>
+            <?php if (!empty($data['errors'])): ?>
+                <div class="alert alert-danger">
+                    <?php foreach ($data['errors'] as $error): ?>
+                        <p><?= htmlspecialchars($error) ?></p>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+
+            <h1 class="h3 mb-3 fw-normal">Create account</h1>
+
+            <div class="form-floating">
+                <input name="email" type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                <label for="floatingInput">Email address</label>
             </div>
-        </header>
+            <div class="form-floating">
+                <input name="password" type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                <label for="floatingPassword">Password</label>
+            </div>
 
-        <main class="px-3">
-            <h1>Cover your page.</h1>
-            <p class="lead">Cover is a one-page template for building simple and beautiful home pages. Download, edit the text, and add your own fullscreen background photo to make it your own.</p>
-            <p class="lead">
-                <a href="#" class="btn btn-lg btn-light fw-bold border-white bg-white">Learn more</a>
-            </p>
-        </main>
-
-        <footer class="mt-auto text-white-50">
-            <p>Cover template for <a href="https://getbootstrap.com/" class="text-white">Bootstrap</a>, by <a href="https://twitter.com/mdo" class="text-white">@mdo</a>.</p>
-        </footer>
-    </div>
-    <script src="<?ROOT?>/assets/js/bootstrap.bundle.min.js"></script>
+            <div class="form-check text-start my-3">
+                <input name="terms" class="form-check-input" type="checkbox" value="1" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">
+                    Accept terms
+                </label>
+            </div>
+            <button class="btn btn-primary w-100 py-2" type="submit">Sign up</button>
+            <a href="<?= ROOT ?>">Home</a>
+            <a href="<?= ROOT ?>/login">Login</a>
+        </form>
+    </main>
+    <script src="<?= ROOT ?>/assets/js/bootstrap.bundle.min.js"></script>
 
 </body>
 

@@ -6,10 +6,11 @@ Trait Model {
     use Database; // Utilisation du trait Database pour gérer la connexion à la base de données
 
     // Propriétés par défaut pour la pagination et l'ordre des résultats
-    protected $limit = 10; 
-    protected $offset = 0; // Décalage pour la pagination
-    protected $order_type = "desc"; 
+    protected $limit        = 10; 
+    protected $offset       = 0; // Décalage pour la pagination
+    protected $order_type   = "desc"; 
     protected $order_column = "id"; // Colonne par défaut pour trier les résultats
+    public $errors       = []; // Tableau pour stocker les erreurs de validation
 
     // Méthode pour récupérer tous les enregistrements de la table
     public function findAll() {
