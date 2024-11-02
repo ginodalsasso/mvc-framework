@@ -20,6 +20,8 @@
             $email = filter_var($data['email'], FILTER_VALIDATE_EMAIL);
             if (!$email) {
                 $this->errors['email'] = "email is not valid";
+            } else if ($this->findOneby(['email' => $data['email']])) {
+                $this->errors['email'] = "email already exists";
             }
     
             // Validation du mot de passe

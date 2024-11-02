@@ -26,7 +26,7 @@ Trait Model {
     }
 
     // Méthode pour récupérer des enregistrements avec des conditions WHERE
-    public function where($data, $data_not = []) {
+    public function findAllBy($data, $data_not = []) {
 
         // Récupération des clés des conditions 'data' et 'data_not'
         $keys = array_keys($data);
@@ -37,16 +37,16 @@ Trait Model {
 
         // Ajout des conditions 'key = value' pour chaque élément de 'data'
         foreach($keys as $key) {
-            $query .= $key . " = :" . $key . " && ";
+            $query .= $key . " = :" . $key . " AND ";
         }
 
         // Ajout des conditions 'key != value' pour chaque élément de 'data_not'
         foreach($keys_not as $key) {
-            $query .= $key . " != :" . $key . " && ";
+            $query .= $key . " != :" . $key . " AND ";
         }
 
-        // Suppression du dernier '&&' superflu de la requête
-        $query = trim($query, " && "); 
+        // Suppression du dernier 'AND' superflu de la requête
+        $query = trim($query, " AND "); 
         // Ajout de l'ordre et de la limite de résultats
         $query .= " ORDER BY $this->order_column $this->order_type 
                     LIMIT $this->limit 
@@ -59,9 +59,12 @@ Trait Model {
         return $this->query($query, $data);
     }
 
+        // SELECT * 
+        // FROM users 
+        // WHERE email = :email AND status != :status 
+        // LIMIT 1 OFFSET 0;
     // Méthode pour récupérer un seul enregistrement avec des conditions WHERE et LIMIT
-    public function first($data, $data_not = []) {
-
+    public function findOneBy($data, $data_not = []) {
         // Récupération des clés des conditions 'data' et 'data_not'
         $keys = array_keys($data);
         $keys_not = array_keys($data_not);
@@ -71,16 +74,15 @@ Trait Model {
 
         // Ajout des conditions 'key = value' pour chaque élément de 'data'
         foreach($keys as $key) {
-            $query .= $key . " = :" . $key . " && ";
+            $query .= $key . " = :" . $key . " AND ";
         }
-
         // Ajout des conditions 'key != value' pour chaque élément de 'data_not'
         foreach($keys_not as $key) {
-            $query .= $key . " != :" . $key . " && ";
+            $query .= $key . " != :" . $key . " AND ";
         }
 
-        // Suppression du dernier '&&' superflu de la requête
-        $query = trim($query, " && ");
+        // Suppression du dernier 'AND' superflu de la requête
+        $query = trim($query, " AND ");
         // Ajout de la limite de résultat (1 seul enregistrement) pour la méthode 'first'
         $query .= " LIMIT $this->limit 
                     OFFSET $this->offset"; 

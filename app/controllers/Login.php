@@ -15,7 +15,7 @@
                     "email" => $_POST['email']
                 ];
 
-                $row = $user->first($arr);
+                $row = $user->findOneBy($arr);
 
                 
                 if($row){
