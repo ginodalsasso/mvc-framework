@@ -13,28 +13,40 @@
             "password"
         ];
 
-        public function validate($data){
+        public function validate($data) {
             $this->errors = [];
-
-            if(empty($data['email'])){
-                $this->errors['email'] = "email is required";
-            } else if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)){
+    
+            // Validation de l'email
+            $email = filter_var($data['email'], FILTER_VALIDATE_EMAIL);
+            if (!$email) {
                 $this->errors['email'] = "email is not valid";
             }
-
-            if(empty($data['password'])){
-                $this->errors['password'] = "password is required";
-            } 
-
-            if(empty($data['terms'])){
-                $this->errors['terms'] = "please accept terms and conditions";
-            } 
-
-            if(empty($this->errors))
-                return true;
+    
+            // Validation du mot de passe
+            $password = $data['password'];
+            $password_regex = "/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/";
             
-
-            return false;
+            if (empty($password)) {
+                $this->errors['password'] = "password is required";
+            } elseif (!preg_match($password_regex, $password)) {
+                $this->errors['password'] = "password must contain at least 8 characters, 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character";
+            }
+    
+            // Validation de la confirmation du mot de passe
+            $password_confirm = $data['password_confirm'];
+            if (empty($password_confirm)) {
+                $this->errors['password_confirm'] = "password confirm is required";
+            } elseif ($password !== $password_confirm) {
+                $this->errors['password_confirm'] = "passwords do not match";
+            }
+    
+            // Validation des conditions d'utilisation
+            if (empty($data['terms']) || $data['terms'] != '1') {
+                $this->errors['terms'] = "please accept terms and conditions";
+            }
+    
+            // Retourner true si aucune erreur, sinon false
+            return empty($this->errors);
         }
 
     }

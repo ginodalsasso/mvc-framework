@@ -120,7 +120,11 @@
                 <input name="password" type="password" class="form-control" id="floatingPassword" placeholder="Password">
                 <label for="floatingPassword">Password</label>
             </div>
-
+            <div class="form-floating">
+                <input name="password_confirm" type="password" class="form-control" id="password_confirm" placeholder="Password confirm">
+                <label for="password_confirm">Password Confirm</label>
+            </div>
+            
             <div class="form-check text-start my-3">
                 <input name="terms" class="form-check-input" type="checkbox" value="1" id="flexCheckDefault">
                 <label class="form-check-label" for="flexCheckDefault">

@@ -10,11 +10,17 @@
 
             if($_SERVER['REQUEST_METHOD'] == "POST"){
                 $user = new User;
+                show($_POST);
                 if($user->validate($_POST)){
-                    // Hasher le mot de passe avant l'insertion
-                    $_POST['password'] = password_hash($_POST['password'], PASSWORD_DEFAULT);
+                     // Crée un tableau filtré des données pour l'insertion
+                    $filteredData = [
+                        'email' => $_POST['email'],
+                        'password' => password_hash($_POST['password'], PASSWORD_DEFAULT),
+                    ];
 
-                    $user->insert($_POST);
+                    // Insertion dans la base de données
+                    $user->insert($filteredData);
+                    
                     redirect("login");
                 }
     
