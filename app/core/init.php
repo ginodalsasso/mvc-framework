@@ -1,4 +1,5 @@
 <?php 
+    defined('ROOTPATH') OR exit("Access Denied!");
 
     // ici on inclut tous les fichiers nécessaires à l'application
     

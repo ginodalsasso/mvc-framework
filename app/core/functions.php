@@ -1,4 +1,5 @@
 <?php
+    defined('ROOTPATH') OR exit("Access Denied!");
 
     // Fonction pour afficher les données sous forme de tableau
     function show($stuff) {

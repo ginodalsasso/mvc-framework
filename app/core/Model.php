@@ -1,4 +1,5 @@
 <?php 
+    defined('ROOTPATH') OR exit("Access Denied!");
 
 // Définition du trait Model qui contient des méthodes pour interagir avec la base de données.
 Trait Model {
