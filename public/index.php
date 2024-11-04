@@ -2,6 +2,8 @@
 
     session_start();
 
+    define('ROOTPATH', __DIR__ . DIRECTORY_SEPARATOR); // On définit le chemin du dossier racine
+
     require "../app/core/init.php";
 
     // On définit le mode debug en fonction de la constante DEBUG
