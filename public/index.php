@@ -2,6 +2,12 @@
 
     session_start();
 
+    echo phpversion();
+    $minPHPVersion = "8.0";
+    if(phpversion() < $minPHPVersion) {
+        die("Your PHP version must be { $minPHPVersion } or higher to run this application. Your current PHP version is " . phpversion() . ".");
+    }
+
     define('ROOTPATH', __DIR__ . DIRECTORY_SEPARATOR); // On définit le chemin du dossier racine
 
     require "../app/core/init.php";
