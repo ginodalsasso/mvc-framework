@@ -129,6 +129,7 @@
     }
 
 
+
     // Fonction pour récupérer les anciennes valeurs type select des champs de formulaire
     // ex: select name="country" option value="old_select('country', 'France')"
     function old_select(string $key, mixed $value, mixed $default = "", string $mode = "post"): string {
@@ -149,12 +150,19 @@
     }
 
 
-    // Retourne la date formatée
+    /**
+     * Cette fonction prend une date en entrée et retourne la date formatée
+     * au format "jour/mois/année".
+     */
     function get_date($date): string {
         return date("j/m/Y", strtotime($date));
     }
 
 
+    /** 
+     * Remplace les images encodées en base64 dans un contenu HTML par des fichiers image locaux, 
+     * en les enregistrant dans un dossier spécifique et en les redimensionnant
+     */
     function remove_images_from_content($content, $folder = "uploads/"){
         // Vérifie si le dossier de destination existe, sinon le crée
         if (!file_exists($folder)) {
@@ -199,4 +207,82 @@
             }
         }
         return $updatedContent; // Retourne le contenu mis à jour avec les nouvelles références d'image   
+    }
+
+
+    /**
+     * Supprime les images locales référencées dans le contenu HTML initial, qui ne sont plus présentes
+     * dans le contenu mis à jour ou supprime toutes les images si aucun contenu mis à jour n'est fourni.
+     */
+    function delete_images_from_content(string $content, string $content_new = ""): void {
+        if (empty($content_new)) {
+            // Récupère toutes les balises <img> dans le contenu original
+            preg_match_all('/<img[^>]+>/i', $content, $imageTags); // équivalent à <img[^>]+src="([^"]+)"
+            
+            // Supprime chaque image locale trouvée dans le contenu original
+            if (is_array($imageTags) && count($imageTags) > 0) {
+                foreach ($imageTags[0] as $imageTag) {
+                    preg_match('/src="([^"]+)"/', $imageTag, $srcAttribute);
+                    $filename = str_replace('src="', "", $srcAttribute[0]);
+
+                    if (file_exists($filename)) {
+                        unlink($filename);
+                    }
+                }
+            }
+        } else {
+            // Récupère les balises <img> dans le contenu initial et le contenu mis à jour
+            preg_match_all('/<img[^>]+>/i', $content, $imageTags);
+            preg_match_all('/<img[^>]+>/i', $content_new, $imageTags_new);
+            
+            $old_images = []; // Chemins des images dans le contenu initial
+            $new_images = []; // Chemins des images dans le contenu mis à jour
+
+            // Stocke les chemins des images trouvées dans le contenu initial
+            if (is_array($imageTags) && count($imageTags) > 0) {
+                foreach ($imageTags[0] as $imageTag) {
+                    preg_match('/src="([^"]+)"/', $imageTag, $srcAttribute);
+                    $filename = str_replace('src="', "", $srcAttribute[0]);
+                    $old_images[] = $filename;
+                }
+            }
+
+            // Stocke les chemins des images trouvées dans le contenu mis à jour
+            if (is_array($imageTags_new) && count($imageTags_new) > 0) {
+                foreach ($imageTags_new[0] as $imageTag) {
+                    preg_match('/src="([^"]+)"/', $imageTag, $srcAttribute);
+                    $filename = str_replace('src="', "", $srcAttribute[0]);
+                    $new_images[] = $filename;
+                }
+            }
+
+            // Supprime les images locales présentes dans le contenu initial mais absentes du contenu mis à jour
+            foreach ($old_images as $old_image) {
+                if (!in_array($old_image, $new_images) && file_exists($old_image)) {
+                    unlink($old_image);
+                }
+            }
+        }
+    }
+
+    
+    /**
+     * Ajoute le chemin de la racine aux images locales dans le contenu HTML.
+     */
+    function add_root_to_images($contents) {
+        // Récupère toutes les balises <img> dans le contenu
+        preg_match_all('/<img[^>]+>/i', $contents, $images);
+        
+        if (is_array($images) && count($images) > 0) {
+            foreach ($images[0] as $image) {
+                // Extrait l'attribut src de chaque image
+                preg_match('/src="([^"]+)"/', $image, $src);
+
+                // Ajoute ROOT au chemin de l'image si ce n'est pas un lien externe
+                if (!strstr($src[0], 'http')) {
+                    $contents = str_replace($src[0], 'src="' . ROOT . '/' . str_replace('src="', "", $src[0]), $contents);
+                }
+            }
+        }
+        return $contents;
     }
