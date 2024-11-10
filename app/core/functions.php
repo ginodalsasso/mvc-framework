@@ -28,6 +28,7 @@
         }
     }
 
+
     // Fonction pour afficher les données sous forme de tableau
     function show($stuff) {
         echo "<pre>";
@@ -35,12 +36,29 @@
         echo "</pre>";
     }
 
+
     // Fonction pour échapper les caractères spéciaux
     function esc($string) {
         return htmlspecialchars($string);
     }
 
+
     function redirect($path){
         header("Location: ".ROOT."/".$path);
         die;
+    }
+
+    
+    // Fonction pour afficher les images
+    function get_image(mixed $file = '', string $type = 'post'): string {
+        $file = $file ?? '';
+        if(file_exists($file)){
+            return ROOT . '/' . $file;
+        } 
+
+        if($type == 'user') {
+            return ROOT . '/assets/images/user.webp';
+        } else {
+            return ROOT . '/assets/images/default.webp';
+        }
     }
