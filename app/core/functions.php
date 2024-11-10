@@ -77,6 +77,7 @@
 
 
     // Fonction pour afficher les messages à l'utilisateur
+    // ex: message('Votre compte a été créé avec succès', true)
     function message(string $msg = null, bool $clear = false) {
 
         $session = new Core\Session();
@@ -93,4 +94,56 @@
             return $msg;
         }
         return false;
+    }
+
+
+    // Fonction pour récupérer les anciennes valeurs type text des champs de formulaire
+    // ex: input type="text" value="old_value('name')"
+    function old_value(string $key, mixed $default = "", string $mode = "post"): mixed {
+
+        $POST = ($mode == "post") ? $_POST : $_GET; // Si le mode est post, on récupère les données post, sinon on récupère les données get
+        
+        if(isset($POST[$key])){ // Si la clé existe dans le tableau, on retourne sa valeur
+            return $POST[$key];
+        }
+
+        return $default; // Sinon on retourne la valeur par défaut
+    }
+
+
+    // Fonction pour récupérer les anciennes valeurs type radio des champs de formulaire
+    // ex: input type="radio" checked
+    function old_checked(string $key, string $value, string $default = ""): string {
+
+        if(isset($_POST[$key])){ // Si la clé existe dans le tableau
+            if($_POST[$key] == $value){ // Si la valeur de la clé est égale à la valeur passée en paramètre
+                return "checked";
+            }
+        } else {
+            if($_SERVER['REQUEST_METHOD'] == "GET" && $default == $value){ // Si la méthode est GET et la valeur par défaut est égale à la valeur passée en paramètre
+                return "checked";
+            }
+        }
+
+        return ""; // Sinon on retourne une chaîne vide
+    }
+
+
+    // Fonction pour récupérer les anciennes valeurs type select des champs de formulaire
+    // ex: select name="country" option value="old_select('country', 'France')"
+    function old_select(string $key, mixed $value, mixed $default = "", string $mode = "post"): string {
+
+        $POST = ($mode == "post") ? $_POST : $_GET; // Si le mode est post, on récupère les données post, sinon on récupère les données get
+
+        if(isset($POST[$key])){ // Si la clé existe dans le tableau
+            if($POST[$key] == $value){ // Si la valeur de la clé est égale à la valeur passée en paramètre
+                return "selected";
+            }
+        } else {
+            if($default == $value){ // Si la valeur par défaut est égale à la valeur passée en paramètre
+                return "selected";
+            }
+        }
+
+        return ""; // Sinon on retourne une chaîne vide
     }
