@@ -38,7 +38,7 @@
 
 
     // Fonction pour échapper les caractères spéciaux
-    function esc($string) {
+    function esc($string) :string {
         return htmlspecialchars($string);
     }
 
@@ -48,7 +48,7 @@
         die;
     }
 
-    
+
     // Fonction pour afficher les images
     function get_image(mixed $file = '', string $type = 'post'): string {
         $file = $file ?? '';
@@ -61,4 +61,16 @@
         } else {
             return ROOT . '/assets/images/default.webp';
         }
+    }
+
+
+    // Fonction pour retourner les variables de pagination
+    function get_pagination_vars(): array {
+        $vars = [];
+        $vars['page'] = $_GET['page'] ?? 1; // Si la page n'est pas définie, on affiche la première page
+        $vars['page'] = (int)$vars['page']; // On s'assure que la page est un entier
+        $vars['prev_page'] = $vars['page'] <= 1 ? 1 : $vars['page'] - 1; // Si la page est inférieure ou égale à 1, on affiche la première page, sinon on affiche la page précédente
+        $vars['next_page'] = $vars['page'] + 1; // On affiche la page suivante
+
+        return $vars;
     }
