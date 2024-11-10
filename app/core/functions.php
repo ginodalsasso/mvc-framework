@@ -74,3 +74,23 @@
 
         return $vars;
     }
+
+
+    // Fonction pour afficher les messages à l'utilisateur
+    function message(string $msg = null, bool $clear = false) {
+
+        $session = new Core\Session();
+
+        if(!empty($msg)){ // Si le message n'est pas vide on le stocke dans la session
+            $session->set('message', $msg);
+
+        }else if(!empty($session->get('message'))){ // Sinon on le récupère
+            $msg = $session->get('message');
+
+            if($clear){ // Si clear = true, on supprime le message de la session
+                $session->pop('message');
+            }
+            return $msg;
+        }
+        return false;
+    }
