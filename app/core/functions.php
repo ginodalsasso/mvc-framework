@@ -117,11 +117,11 @@
 
         if(isset($_POST[$key])){ // Si la clé existe dans le tableau
             if($_POST[$key] == $value){ // Si la valeur de la clé est égale à la valeur passée en paramètre
-                return "checked";
+                return " checked ";
             }
         } else {
             if($_SERVER['REQUEST_METHOD'] == "GET" && $default == $value){ // Si la méthode est GET et la valeur par défaut est égale à la valeur passée en paramètre
-                return "checked";
+                return " checked ";
             }
         }
 
@@ -137,13 +137,66 @@
 
         if(isset($POST[$key])){ // Si la clé existe dans le tableau
             if($POST[$key] == $value){ // Si la valeur de la clé est égale à la valeur passée en paramètre
-                return "selected";
+                return " selected ";
             }
         } else {
             if($default == $value){ // Si la valeur par défaut est égale à la valeur passée en paramètre
-                return "selected";
+                return " selected ";
             }
         }
 
         return ""; // Sinon on retourne une chaîne vide
+    }
+
+
+    // Retourne la date formatée
+    function get_date($date): string {
+        return date("j/m/Y", strtotime($date));
+    }
+
+
+    function remove_images_from_content($content, $folder = "uploads/"){
+        // Vérifie si le dossier de destination existe, sinon le crée
+        if (!file_exists($folder)) {
+            mkdir($folder, 0777, true);
+            file_put_contents($folder . ".htaccess", "Deny from all"); // Crée un fichier .htaccess pour interdire l'accès au dossier
+        }
+    
+        // Recherche toutes les balises <img> dans le contenu
+        preg_match_all('/<img[^>]+>/i', $content, $imageTags);
+        $updatedContent = $content; // Stocke le contenu initial dans une nouvelle variable pour modification
+    
+        // Si des balises <img> sont trouvées dans le contenu
+        if (is_array($imageTags) && count($imageTags) > 0) {
+            $imageProcessor = new \Core\Image(); // Initialise l'instance de la classe Image
+    
+            // Parcourt chaque balise <img> trouvée
+            foreach ($imageTags[0] as $imageTag) {
+                // Ignore les images avec un lien externe (http ou https)
+                if (strstr($imageTag, "http")) { 
+                    continue;
+                }
+    
+                // Extrait l'attribut src de la balise pour obtenir le chemin de l'image encodée
+                preg_match('/src="([^"]+)"/', $imageTag, $srcAttribute);
+    
+                // Extrait l'attribut data-filename pour obtenir le nom de l'image
+                preg_match('/data-filename="([^"]+)"/', $imageTag, $filenameAttribute);
+    
+                // Vérifie si l'image est encodée en base64 (présence de 'data' dans l'URL)
+                if (strstr($srcAttribute[0], 'data')) { 
+                    $encodedParts = explode(',', $srcAttribute[0]); // Sépare la balise src pour extraire les données encodées en base64
+                    $baseFilename = $filenameAttribute[1] ?? "default_image.jpg"; // Attribue un nom par défaut si l'attribut data-filename est absent
+                    $uniqueFilename = $folder . "img_" . time() . "_" . $baseFilename; // Crée un nom de fichier unique pour éviter les conflits
+    
+                    // Remplace l'ancien chemin par le nouveau chemin du fichier image dans le contenu
+                    $updatedContent = str_replace($encodedParts[0] . ',' . $encodedParts[1], 'src="' . $uniqueFilename . '"', $updatedContent);
+                    file_put_contents($uniqueFilename, base64_decode($encodedParts[1])); // Crée le fichier image décodé dans le dossier
+    
+                    // Redimensionne l'image pour éviter les tailles excessives
+                    $imageProcessor->resize($uniqueFilename, 800, 600);
+                }
+            }
+        }
+        return $updatedContent; // Retourne le contenu mis à jour avec les nouvelles références d'image   
     }
