@@ -49,6 +49,40 @@
     }
 
 
+    /**
+    * Cette fonction récupère un segment de l'URL en fonction de la clé fournie.
+    * L'URL doit être au format 'page/section/action/id'.
+    * @return mixed La partie demandée de l'URL, ou null si elle n'existe pas.
+     */
+    function URL($key):mixed {
+        $URL = $_GET['url'] ?? 'home'; // Si 'url' est absent dans la requête, 'home' est utilisé par défaut
+        $URL = explode('/', trim($URL,"/")); // Convertit la chaîne en tableau en séparant les éléments par "/"
+
+        switch ($key) {
+            case 'page':
+            case 0:
+                return $URL[0] ?? null;
+                break;
+            case 'section':
+            case 'slug':
+            case 1:
+                return $URL[1] ?? null;
+                break;
+            case 'action':
+            case 2:
+                return $URL[2] ?? null;
+                break;
+            case 'id':
+            case 3:
+                return $URL[3] ?? null;
+                break;
+            default:
+                return null;
+                break;
+        }
+    }
+
+
     // Fonction pour afficher les images
     function get_image(mixed $file = '', string $type = 'post'): string {
         $file = $file ?? '';
@@ -77,7 +111,6 @@
 
 
     // Fonction pour afficher les messages à l'utilisateur
-    // ex: message('Votre compte a été créé avec succès', true)
     function message(string $msg = null, bool $clear = false) {
 
         $session = new Core\Session();
@@ -97,8 +130,10 @@
     }
 
 
-    // Fonction pour récupérer les anciennes valeurs type text des champs de formulaire
-    // ex: input type="text" value="old_value('name')"
+    /**
+     *Fonction pour récupérer les anciennes valeurs type text des champs de formulaire
+     *ex: input type="text" value="old_value('name')" 
+     */
     function old_value(string $key, mixed $default = "", string $mode = "post"): mixed {
 
         $POST = ($mode == "post") ? $_POST : $_GET; // Si le mode est post, on récupère les données post, sinon on récupère les données get
@@ -111,8 +146,10 @@
     }
 
 
-    // Fonction pour récupérer les anciennes valeurs type radio des champs de formulaire
-    // ex: input type="radio" checked
+    /**
+    * Fonction pour récupérer les anciennes valeurs type radio des champs de formulaire
+    * ex: input type="radio" checked
+    */
     function old_checked(string $key, string $value, string $default = ""): string {
 
         if(isset($_POST[$key])){ // Si la clé existe dans le tableau
@@ -129,9 +166,10 @@
     }
 
 
-
-    // Fonction pour récupérer les anciennes valeurs type select des champs de formulaire
-    // ex: select name="country" option value="old_select('country', 'France')"
+    /**
+     *Fonction pour récupérer les anciennes valeurs type select des champs de formulaire
+     *ex: select name="country" option value="old_select('country', 'France')"
+     */
     function old_select(string $key, mixed $value, mixed $default = "", string $mode = "post"): string {
 
         $POST = ($mode == "post") ? $_POST : $_GET; // Si le mode est post, on récupère les données post, sinon on récupère les données get
@@ -164,14 +202,13 @@
      * en les enregistrant dans un dossier spécifique et en les redimensionnant
      */
     function remove_images_from_content($content, $folder = "uploads/"){
-        // Vérifie si le dossier de destination existe, sinon le crée
-        if (!file_exists($folder)) {
+        if (!file_exists($folder)) { 
             mkdir($folder, 0777, true);
             file_put_contents($folder . ".htaccess", "Deny from all"); // Crée un fichier .htaccess pour interdire l'accès au dossier
         }
     
         // Recherche toutes les balises <img> dans le contenu
-        preg_match_all('/<img[^>]+>/i', $content, $imageTags);
+        preg_match_all('/<img[^>]+>/i', $content, $imageTags); // équivalent à <img[^>]+src="([^"]+)"
         $updatedContent = $content; // Stocke le contenu initial dans une nouvelle variable pour modification
     
         // Si des balises <img> sont trouvées dans le contenu
@@ -187,7 +224,6 @@
     
                 // Extrait l'attribut src de la balise pour obtenir le chemin de l'image encodée
                 preg_match('/src="([^"]+)"/', $imageTag, $srcAttribute);
-    
                 // Extrait l'attribut data-filename pour obtenir le nom de l'image
                 preg_match('/data-filename="([^"]+)"/', $imageTag, $filenameAttribute);
     
@@ -246,7 +282,6 @@
                     $old_images[] = $filename;
                 }
             }
-
             // Stocke les chemins des images trouvées dans le contenu mis à jour
             if (is_array($imageTags_new) && count($imageTags_new) > 0) {
                 foreach ($imageTags_new[0] as $imageTag) {
@@ -255,7 +290,6 @@
                     $new_images[] = $filename;
                 }
             }
-
             // Supprime les images locales présentes dans le contenu initial mais absentes du contenu mis à jour
             foreach ($old_images as $old_image) {
                 if (!in_array($old_image, $new_images) && file_exists($old_image)) {
@@ -267,7 +301,7 @@
 
     
     /**
-     * Ajoute le chemin de la racine aux images locales dans le contenu HTML.
+     * Converti le chemin relatif de l'image en chemin absolu en ajoutant la racine du site.
      */
     function add_root_to_images($contents) {
         // Récupère toutes les balises <img> dans le contenu
