@@ -213,7 +213,7 @@
     
         // Si des balises <img> sont trouvées dans le contenu
         if (is_array($imageTags) && count($imageTags) > 0) {
-            $imageProcessor = new \Core\Image(); // Initialise l'instance de la classe Image
+            $imageProcessor = new \Model\Image(); // Initialise l'instance de la classe Image
     
             // Parcourt chaque balise <img> trouvée
             foreach ($imageTags[0] as $imageTag) {
