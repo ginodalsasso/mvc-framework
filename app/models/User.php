@@ -1,5 +1,8 @@
 <?php
 
+    //$user = new Model\User;
+    namespace Model;
+
     class User {
 
         use Model;

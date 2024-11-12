@@ -44,8 +44,7 @@ class App {
             }
         }
 
-        // Instancie dynamiquement la classe contrôleur
-        $controller = new $this->controller; 
+        $controller = new ('\Controller\\'.$this->controller);  // Instancie le contrôleur dynamiquement
 
         // Vérifie si la méthode spécifiée dans l'URL existe
         if(!empty($URL[1])){

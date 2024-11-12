@@ -1,10 +1,13 @@
 <?php 
+
+    namespace Model;
+
     defined('ROOTPATH') OR exit("Access Denied!");
 
-// Définition du trait Model qui contient des méthodes pour interagir avec la base de données.
-Trait Model {
+    // Définition du trait Model qui contient des méthodes pour interagir avec la base de données.
+    Trait Model {
 
-    use Database; // Utilisation du trait Database pour gérer la connexion à la base de données
+    use Database; // Utilisation de Database pour gérer la connexion à la base de données
 
     // Propriétés par défaut pour la pagination et l'ordre des résultats
     protected $limit        = 10; 

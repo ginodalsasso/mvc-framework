@@ -1,7 +1,10 @@
 <?php
+
+    namespace Controller;
+
     defined('ROOTPATH') OR exit("Access Denied!");
 
-    Trait Controller {
+    Trait MainController {
         
         // Méthode permettant de charger une vue
         public function view($name, $data = []){

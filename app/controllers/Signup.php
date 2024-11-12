@@ -1,16 +1,21 @@
 <?php 
+
+    namespace Controller;
+
     defined('ROOTPATH') OR exit("Access Denied!");
+
+    // use Model\User; // Importe le modèle User pour l'instancier $user = new User;
 
     class Signup {
 
-        use Controller;
+        use MainController;
 
         public function index() {
 
             $data = [];
 
             if($_SERVER['REQUEST_METHOD'] == "POST"){
-                $user = new User;
+                $user = new \Model\User; // Instancie le modèle User sans le use
                 show($_POST);
                 if($user->validate($_POST)){
                      // Crée un tableau filtré des données pour l'insertion

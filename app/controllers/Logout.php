@@ -1,9 +1,12 @@
 <?php 
+
+    namespace Controller;
+
     defined('ROOTPATH') OR exit("Access Denied!");
 
     class Logout {
 
-        use Controller;
+        use MainController;
 
         public function index() {
             if(isset($_SESSION['USER']))
