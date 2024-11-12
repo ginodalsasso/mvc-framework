@@ -4,7 +4,7 @@
     check_extensions();
 
     // Fonction pour vérifier les extensions requises
-    function check_extensions() {
+    function check_extensions(): void {
         // extensions actives du fichier php.ini
         $required_extensions = [
             'gd',
@@ -30,7 +30,7 @@
 
 
     // Fonction pour afficher les données sous forme de tableau
-    function show($stuff) {
+    function show($stuff): void {
         echo "<pre>";
         print_r($stuff);
         echo "</pre>";
@@ -43,7 +43,7 @@
     }
 
 
-    function redirect($path){
+    function redirect($path): void {
         header("Location: ".ROOT."/".$path);
         die;
     }
@@ -111,7 +111,7 @@
 
 
     // Fonction pour afficher les messages à l'utilisateur
-    function message(string $msg = null, bool $clear = false) {
+    function message(string $msg = null, bool $clear = false): mixed {
 
         $session = new Core\Session();
 
@@ -201,7 +201,7 @@
      * Remplace les images encodées en base64 dans un contenu HTML par des fichiers image locaux, 
      * en les enregistrant dans un dossier spécifique et en les redimensionnant
      */
-    function remove_images_from_content($content, $folder = "uploads/"){
+    function remove_images_from_content($content, $folder = "uploads/") {
         if (!file_exists($folder)) { 
             mkdir($folder, 0777, true);
             file_put_contents($folder . ".htaccess", "Deny from all"); // Crée un fichier .htaccess pour interdire l'accès au dossier

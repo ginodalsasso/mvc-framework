@@ -1,7 +1,7 @@
 <?php
     defined('ROOTPATH') OR exit("Access Denied!");
 
-    if($_SERVER["SERVER_NAME"] == "localhost") {
+    if($_SERVER["SERVER_NAME"] == "localhost") {  // Si le serveur est en local
         // database configuration
         define ('DBNAME', 'my_db');
         define ('DBHOST', 'localhost');
@@ -9,8 +9,8 @@
         define ('DBPASS', '');
 
         // root url
-        define ('ROOT', 'http://localhost/mvc-framework/public');
-    } else {
+        define ('ROOT', 'http://localhost/mvc-framework/public'); 
+    } else { // Si le serveur est en ligne
         // database configuration
         define ('DBNAME', 'my_db');
         define ('DBHOST', 'localhost');
