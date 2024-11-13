@@ -215,13 +215,12 @@
             if(!empty($this->validationRules)){ // Si des règles de validation sont définies
                 
                 foreach($this->validationRules as $column => $rules){ // Pour chaque $column = email, username, password...
+                    
+                    // if (!isset($data[$column])) // Vérifie si la clé est présente
+                    //     continue; // Passe au champ suivant si la clé n'est pas définie
+                    
                     foreach ($rules as $rule) { // $rule = required, email, unique, min, max, regex...
                         switch ($rule) { // Vérification de chaque règle
-                            case 'required':
-                                if(empty($data[$column])){
-                                    $this->errors[$column] = ucfirst($column) . " is required";
-                                }
-                                break;
                             case 'email':
                                 if(!filter_var($data[$column], FILTER_VALIDATE_EMAIL)){
                                     $this->errors[$column] = "Invalid email address";
@@ -246,11 +245,6 @@
                                     $this->errors[$column] = ucfirst($column) . " must be at least 8 characters"; 
                                 }
                                 break;
-                            case 'regex':
-                                if(!preg_match($rules['regex'], trim($data[$column]))){ // Vérifie si la chaîne correspond à l'expression régulière
-                                    $this->errors[$column] = "Invalid format for: " . ucfirst($column); 
-                                }
-                                break;
                             case 'unique':
                                 $key = $this->getPrimaryKey();
                                 if(!empty($data[$key])) {
@@ -264,6 +258,12 @@
                                         $this->errors[$column] = ucfirst($column) . " should be unique"; 
                                     }
                                 }
+                                break;
+                            case 'required':
+                                if(empty($data[$column])){
+                                    $this->errors[$column] = ucfirst($column) . " is required";
+                                }
+                                break;
                             default:
                                 $this->errors["rule"] = "Invalid rule: " . $rule;
                                 break;

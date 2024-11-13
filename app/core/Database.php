@@ -13,20 +13,25 @@
             return $con;
         }
 
-        // requête à la base de données
         public function query($query, $data = []) {
             $con = $this->connect();
             $stmt = $con->prepare($query);
-
-            $check = $stmt->execute($data);
-            // si la requête est un succès
-            if($check) {
-                $result = $stmt->fetchAll(\PDO::FETCH_OBJ); 
-                // si le résultat est un tableau et qu'il contient des données
-                if(is_array($result) && count($result)) {
-                    return $result;
+        
+            try {
+                $check = $stmt->execute($data);
+                if ($check) {
+                    $result = $stmt->fetchAll(\PDO::FETCH_OBJ); 
+                    if (is_array($result) && count($result)) {
+                        return $result;
+                    }
                 }
+            } catch (\PDOException $e) {
+                echo "SQL Error : " . $e->getMessage();
+                echo "<br>Query : " . $query;
+                echo "<br>Data : " . print_r($data, true);
+                die();
             }
+        
             return false;
         }
 

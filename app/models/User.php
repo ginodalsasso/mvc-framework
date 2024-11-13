@@ -14,25 +14,25 @@
         // déterminer les colonnes autorisées à être modifiées
         protected $allowedColumns = [
             "email",
-            "password"
+            "password",
+            "username"
         ];
 
-        // déterminer les règles de validation des données voir la méthode validate dans Model.php
+        // déterminer les règles de validation des données voir la méthode validate dans Model.php (l'ordre des règles est important)
         protected $validationRules = [
             "email" => [
-                "required",
                 "email", 
                 "unique" => "users",
+                "required",
             ],
             "username" => [
-                "required",
                 "alpha_numeric",
-                "unique" => "users"
+                "unique" => "users",
+                "required",
             ],
             "password" => [
-                "required",
                 "not_less_than_8_chars",
-                "regex" => "/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/"
+                "required",
             ]
         ];
 

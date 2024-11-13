@@ -102,6 +102,7 @@
     <main class="form-signin w-100 m-auto">
         <form method="POST">
 
+            
             <?php if (!empty($data['errors'])): ?>
                 <div class="alert alert-danger">
                     <?php foreach ($data['errors'] as $error): ?>
@@ -113,24 +114,35 @@
             <h1 class="h3 mb-3 fw-normal">Create account</h1>
 
             <div class="form-floating">
-                <input name="email" type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                <input value="<?= old_value("username") ?>" name="username" type="username" class="form-control" id="floatingInput" placeholder="username">
+                <label for="floatingInput">username</label>
+            </div>
+            <div><?= $user->getError('username') ?></div>
+
+            <div class="form-floating">
+                <input value="<?= old_value("email") ?>" name="email" type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
                 <label for="floatingInput">Email address</label>
             </div>
+            <div><?= $user->getError('email') ?></div>
+            
             <div class="form-floating">
-                <input name="password" type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                <input value="<?= old_value("password") ?>" name="password" type="password" class="form-control" id="floatingPassword" placeholder="Password">
                 <label for="floatingPassword">Password</label>
             </div>
+            <div><?= $user->getError('password') ?></div>
+            <!--
             <div class="form-floating">
                 <input name="password_confirm" type="password" class="form-control" id="password_confirm" placeholder="Password confirm">
                 <label for="password_confirm">Password Confirm</label>
             </div>
-            
             <div class="form-check text-start my-3">
                 <input name="terms" class="form-check-input" type="checkbox" value="1" id="flexCheckDefault">
                 <label class="form-check-label" for="flexCheckDefault">
                     Accept terms
                 </label>
-            </div>
+            </div> 
+                    -->
+
             <button class="btn btn-primary w-100 py-2" type="submit">Sign up</button>
             <a href="<?= ROOT ?>">Home</a>
             <a href="<?= ROOT ?>/login">Login</a>
