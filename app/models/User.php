@@ -5,7 +5,7 @@
 
     class User {
 
-        use Model;
+        use Model; // Utilisation du trait Model pour les méthodes de base de données
 
         // déterminer la table à utiliser
         protected $table = "users";
