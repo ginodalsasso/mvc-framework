@@ -91,7 +91,7 @@
 
             // Suppression du dernier 'AND' superflu de la requête
             $query = trim($query, " AND ");
-            // Ajout de la limite de résultat (1 seul enregistrement) pour la méthode 'first'
+            // Ajout de la limite de résultat (1 seul enregistrement) pour la méthode 'findoneby'
             $query .= " LIMIT $this->limit 
                         OFFSET $this->offset"; 
 
@@ -188,6 +188,92 @@
 
             // Exécution de la requête
             $this->query($query, $data);
+
+            return false;
+        }
+
+
+        // Retourne les erreurs de validation
+        public function getError($key) {
+
+            if(!empty($this->errors[$key])){
+                return $this->errors[$key];
+            }
+            return "";
+        }
+
+
+        // Retourn "id" par défaut si la clé primaire n'est pas définie dans le modèle
+        protected function getPrimaryKey() {
+            return $this->primaryKey ?? "id";
+        }
+
+
+        public function validate($data){
+            $this->errors = [];
+
+            if(!empty($this->validationRules)){ // Si des règles de validation sont définies
+                
+                foreach($this->validationRules as $column => $rules){ // Pour chaque $column = email, username, password...
+                    foreach ($rules as $rule) { // $rule = required, email, unique, min, max, regex...
+                        switch ($rule) { // Vérification de chaque règle
+                            case 'required':
+                                if(empty($data[$column])){
+                                    $this->errors[$column] = ucfirst($column) . " is required";
+                                }
+                                break;
+                            case 'email':
+                                if(!filter_var($data[$column], FILTER_VALIDATE_EMAIL)){
+                                    $this->errors[$column] = "Invalid email address";
+                                }
+                                break;
+                            case 'alpha_numeric':
+                                if(!ctype_alnum($data[$column])){ // Vérifie si la chaîne contient uniquement des caractères alphanumériques
+                                    $this->errors[$column] = ucfirst($column) . " must be alphabet or numeric"; 
+                                }
+                                break;
+                            case 'alpha':
+                                if(!preg_match("/^[a-zA-Z ]*$/", $data[$column])){ // Vérifie si la chaîne contient uniquement des lettres
+                                    $this->errors[$column] = ucfirst($column) . " must be alphabet"; 
+                                }
+                            case 'alpha_symbol':
+                                if(!preg_match("/^[a-zA-Z0-9 ]*$/", $data[$column])){ // Vérifie si la chaîne contient uniquement des lettres et des chiffres
+                                    $this->errors[$column] = ucfirst($column) . " must be alphabet or numeric"; 
+                                }
+                                break;
+                            case 'not_less_than_8_chars':
+                                if(strlen($data[$column]) < 8){ // Vérifie si la chaîne contient au moins 8 caractères
+                                    $this->errors[$column] = ucfirst($column) . " must be at least 8 characters"; 
+                                }
+                                break;
+                            case 'regex':
+                                if(!preg_match($rules['regex'], trim($data[$column]))){ // Vérifie si la chaîne correspond à l'expression régulière
+                                    $this->errors[$column] = "Invalid format for: " . ucfirst($column); 
+                                }
+                                break;
+                            case 'unique':
+                                $key = $this->getPrimaryKey();
+                                if(!empty($data[$key])) {
+                                    // edit mode 
+                                    if($this->findOneBy([$column => $data[$column]], [$key => $data[$key]])){ // Vérifie si la valeur existe déjà dans la base de données et si l'id est différent
+                                        $this->errors[$column] = ucfirst($column) . " should be unique"; 
+                                    }
+                                }else{ // Si l'identifiant n'est pas défini, on vérifie si la valeur est unique
+                                    // insert mode
+                                    if($this->findOneBy([$column => $data[$column]])){ // Vérifie si la valeur existe déjà dans la base de données
+                                        $this->errors[$column] = ucfirst($column) . " should be unique"; 
+                                    }
+                                }
+                            default:
+                                $this->errors["rule"] = "Invalid rule: " . $rule;
+                                break;
+                        }
+                    }
+                }
+            }
+            if(empty($this->errors)){
+                return true;
+            }
 
             return false;
         }
