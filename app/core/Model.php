@@ -124,17 +124,19 @@
             }
 
             // Récupération des clés du tableau de données
-            $keys = array_keys($data);
+            $keys = array_keys($data); // $keys = ['name', 'date']
 
             // requête SQL INSERT
-            $query= "INSERT INTO $this->table (".implode(",", $keys).") 
-                        VALUES (:".implode(",:", $keys).")"; // VALUES (:name, :date)
+            $query = "INSERT INTO $this->table (".implode(",", $keys).") 
+                        VALUES (:".implode(",:", $keys).")";
+
 
             // Exécution de la requête
             $this->query($query, $data);
             
             return false;
         }
+
 
 
         // Méthode pour mettre à jour un enregistrement existant
@@ -210,16 +212,18 @@
 
 
         public function validate($data){
+
             $this->errors = [];
 
             if(!empty($this->validationRules)){ // Si des règles de validation sont définies
                 
                 foreach($this->validationRules as $column => $rules){ // Pour chaque $column = email, username, password...
                     
-                    // if (!isset($data[$column])) // Vérifie si la clé est présente
-                    //     continue; // Passe au champ suivant si la clé n'est pas définie
+                    if (!isset($data[$column]))
+                         continue; // Passe au champ suivant si la clé n'est pas définie
                     
                     foreach ($rules as $rule) { // $rule = required, email, unique, min, max, regex...
+                        
                         switch ($rule) { // Vérification de chaque règle
                             case 'email':
                                 if(!filter_var($data[$column], FILTER_VALIDATE_EMAIL)){
