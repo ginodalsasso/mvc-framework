@@ -223,7 +223,7 @@
                          continue; // Passe au champ suivant si la clé n'est pas définie
                     
                     foreach ($rules as $rule) { // $rule = required, email, unique, min, max, regex...
-                        
+
                         switch ($rule) { // Vérification de chaque règle
                             case 'email':
                                 if(!filter_var($data[$column], FILTER_VALIDATE_EMAIL)){
