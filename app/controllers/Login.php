@@ -12,29 +12,12 @@
 
         public function index() {
 
-            $data = [];
+            $data['user'] = new \Model\User; // Instancie le modèle User sans le use
+            $request = new \Core\Request;
 
-            if($_SERVER['REQUEST_METHOD'] == "POST"){
-
-                $user = new \Model\User; // Instancie le modèle User sans le use
-                $arr = [
-                    "email" => $_POST['email']
-                ];
-
-                $row = $user->findOneBy($arr);
-
-                
-                if($row){
-                    if($row && password_verify($_POST['password'], $row->password)){
-                        $_SESSION['USER'] = $row;
-                        redirect("home");
-                    }
-                }
-                $user->errors['email'] = "email or password is incorrect";
-
-                $data['errors']= $user->errors;
+            if($request->posted()){
+                $data['user']->login($_POST);
             }
-
             $this->view("login", $data);
         }
 

@@ -20,9 +20,13 @@
             public $end = 1;                   // Numéro de la dernière page visible dans la pagination
             public $limit = 10;                // Nombre d'éléments à afficher par page
             public $nav_class = '';            
+            public $nav_styles = '';            
             public $ul_class = 'pagination justify-content-center'; 
+            public $ul_styles = ''; 
             public $li_class = 'page-item';   
+            public $li_styles = '';   
             public $a_class = 'page-link';     
+            public $a_styles = '';     
         
             /**
              * Constructeur de la classe Pagination.

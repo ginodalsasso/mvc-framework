@@ -53,9 +53,9 @@
         
         public function login($data){
 
-            $row = $this->findOneBy([$this->loginUniqueColumn => $data[$this->loginUniqueColumn]]);
+            $row = $this->findOneBy([$this->loginUniqueColumn => $data[$this->loginUniqueColumn]]); // ex: findOneBy(['email' => $data['email']])
 
-            if(!$row){
+            if($row){
                 if(password_verify($data['password'], $row->password)){
 
                     $session = new \Core\Session;
