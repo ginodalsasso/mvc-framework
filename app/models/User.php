@@ -37,7 +37,7 @@
             ]
         ];
 
-        
+
         public function signup($data){
 
             // if($this->validate($data)){
@@ -76,6 +76,7 @@
         
                     // Rediriger vers la page d'accueil
                     redirect("home");
+                    
                 } else {
                     // Si le mot de passe est incorrect
                     $this->errors[$this->loginUniqueColumn] = "Wrong $this->loginUniqueColumn or password";

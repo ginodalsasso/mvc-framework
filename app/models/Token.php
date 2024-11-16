@@ -30,7 +30,12 @@
 
         public function storeToken($additionalData): void {
             $token = $this->generateToken();
-            // $ip_address = $_SERVER['REMOTE_ADDR'];
+
+            $ip_address = filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP);
+            if (!$ip_address) {
+                throw new \Exception("IP adress is invalid");
+            }
+
             $created_at = date('Y-m-d H:i:s');
             $updated_at = $created_at;
             $expires_at = date('Y-m-d H:i:s', strtotime('+1 hour')); // Expiration dans 1 heure
@@ -41,9 +46,11 @@
                 'created_at' => $created_at,
                 'updated_at' => $updated_at,
                 'expires_at' => $expires_at,
+                'ip_address' => $ip_address,
             ] + $additionalData; // ex: ['user_id' => 1]
 
             $this->insert($data);
+            show($data);
         }
 
 

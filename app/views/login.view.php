@@ -123,9 +123,6 @@
 				<label for="floatingPassword">Password</label>
 			</div>
 			<div><?= $user->getError('password') ?></div>
-			<?php echo bin2hex(random_bytes(23)) . date('dmYHis'); 
-			
-			show($_SESSION); ?>
 
 			<!--
 			<div class="form-check text-start my-3">
