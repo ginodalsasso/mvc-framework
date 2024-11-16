@@ -40,15 +40,15 @@
 
         public function signup($data){
 
-            // if($this->validate($data)){
-                // show($data);
+            if($this->validate($data)){
+                show($data);
 
                 $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT); // Hashage du mot de passe
 
                 $this->insert($data); // Insertion dans la base de données
 
                 redirect("login");
-            // }
+            }
         }
 
 
@@ -65,18 +65,32 @@
                     // Initialiser la session pour l'utilisateur
                     $session = new \Core\Session;
                     $session->auth($row);
+                    
+                    $userSessionToken = new \Model\Token;
+                    $existingToken = $userSessionToken->findOneBy(['user_id' => $row->id]);
+
+                    // Vérifier si un token existe et est valide
+                    if ($existingToken && $userSessionToken->isTokenValid($existingToken->token)) {
+                        // Token valide, rediriger directement
+                        redirect("home");
+                        return;
+                    }
         
+                    // Révoquer les anciens tokens si nécessaire
+                    if ($existingToken) {
+                        $userSessionToken->revokeToken($row->id);
+                    }
+
                     // Générer un token pour l'utilisateur
                     $tokenData = [
                         'user_id' => $row->id
                     ];
 
-                    $UserSessionToken = new \Model\Token;
-                    $UserSessionToken->storeToken($tokenData); 
+                    $userSessionToken->storeToken($tokenData); 
         
                     // Rediriger vers la page d'accueil
                     redirect("home");
-                    
+
                 } else {
                     // Si le mot de passe est incorrect
                     $this->errors[$this->loginUniqueColumn] = "Wrong $this->loginUniqueColumn or password";

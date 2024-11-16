@@ -74,8 +74,8 @@
         
                 if ($userId) {
                     // Révoquer le token actif
-                    $TokenModel = new \Model\Token();
-                    $TokenModel->revokeToken($userId);
+                    $token = new \Model\Token();
+                    $token->revokeToken($userId);
                 }
         
                 // Supprimer les données de l'utilisateur de la session
