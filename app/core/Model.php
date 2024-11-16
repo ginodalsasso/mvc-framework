@@ -239,6 +239,7 @@
                                 if(!preg_match("/^[a-zA-Z ]*$/", $data[$column])){ // Vérifie si la chaîne contient uniquement des lettres
                                     $this->errors[$column] = ucfirst($column) . " must be alphabet"; 
                                 }
+                                break;
                             case 'alpha_symbol':
                                 if(!preg_match("/^[a-zA-Z0-9 ]*$/", $data[$column])){ // Vérifie si la chaîne contient uniquement des lettres et des chiffres
                                     $this->errors[$column] = ucfirst($column) . " must be alphabet or numeric"; 
@@ -254,12 +255,12 @@
                                 if(!empty($data[$key])) {
                                     // edit mode 
                                     if($this->findOneBy([$column => $data[$column]], [$key => $data[$key]])){ // Vérifie si la valeur existe déjà dans la base de données et si l'id est différent
-                                        $this->errors[$column] = ucfirst($column) . " should be unique"; 
+                                        $this->errors[$column] = ucfirst($column) . " already exists"; 
                                     }
                                 }else{ // Si l'identifiant n'est pas défini, on vérifie si la valeur est unique
                                     // insert mode
                                     if($this->findOneBy([$column => $data[$column]])){ // Vérifie si la valeur existe déjà dans la base de données
-                                        $this->errors[$column] = ucfirst($column) . " should be unique"; 
+                                        $this->errors[$column] = ucfirst($column) . " already exists"; 
                                     }
                                 }
                                 break;

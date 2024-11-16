@@ -23,12 +23,12 @@
         protected $validationRules = [
             "email" => [
                 "email", 
-                "unique" => "users",
+                "unique",
                 "required",
             ],
             "username" => [
                 "alpha_numeric",
-                "unique" => "users",
+                "unique",
                 "required",
             ],
             "password" => [
@@ -48,6 +48,9 @@
                 $this->insert($data); // Insertion dans la base de données
 
                 redirect("login");
+            } else {
+                // Affichage des erreurs
+                show($this->errors);
             }
         }
 
