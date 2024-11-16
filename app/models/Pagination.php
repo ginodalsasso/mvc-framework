@@ -19,6 +19,7 @@
             public $start = 1;                 // Numéro de la première page visible dans la pagination
             public $end = 1;                   // Numéro de la dernière page visible dans la pagination
             public $limit = 10;                // Nombre d'éléments à afficher par page
+            // styles
             public $nav_class = '';            
             public $nav_styles = '';            
             public $ul_class = 'pagination justify-content-center'; 

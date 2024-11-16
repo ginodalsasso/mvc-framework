@@ -65,16 +65,26 @@
         }
 
 
-        public function logout():int {
-
-            $this -> start_session(); // Démarrage de la session
-            
-                if(!empty($_SESSION[$this->userKey])) { // Si les données de l'utilisateur existent dans la session
-                unset($_SESSION[$this->userKey]); // On supprime les données de l'utilisateur de la session
+        public function logout(): int {
+            $this->start_session(); // Démarrage de la session
+        
+            // Vérifiez si les données utilisateur existent dans la session
+            if (!empty($_SESSION[$this->userKey])) {
+                $userId = $_SESSION[$this->userKey]->id ?? null; // Récupérer l'ID de l'utilisateur
+        
+                if ($userId) {
+                    // Révoquer le token actif
+                    $TokenModel = new \Model\Token();
+                    $TokenModel->revokeToken($userId);
+                }
+        
+                // Supprimer les données de l'utilisateur de la session
+                unset($_SESSION[$this->userKey]);
             }
-
+        
             return 1;
         }
+        
 
 
         // Méthode pour vérifier si l'utilisateur est connecté

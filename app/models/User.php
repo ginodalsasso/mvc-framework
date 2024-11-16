@@ -37,6 +37,7 @@
             ]
         ];
 
+        
         public function signup($data){
 
             // if($this->validate($data)){
@@ -50,24 +51,39 @@
             // }
         }
 
+
+        public function login($data) {
+            // Rechercher l'utilisateur dans la base de données
+            $row = $this->findOneBy([ // ex: findOneBy(['email' => $data['email']])
+                $this->loginUniqueColumn => $data[$this->loginUniqueColumn]
+            ]); 
         
-        public function login($data){
-
-            $row = $this->findOneBy([$this->loginUniqueColumn => $data[$this->loginUniqueColumn]]); // ex: findOneBy(['email' => $data['email']])
-
-            if($row){
-                if(password_verify($data['password'], $row->password)){
-
+            if ($row) {
+                // Vérifier si le mot de passe est correct
+                if (password_verify($data['password'], $row->password)) {
+        
+                    // Initialiser la session pour l'utilisateur
                     $session = new \Core\Session;
                     $session->auth($row);
         
+                    // Générer un token pour l'utilisateur
+                    $tokenData = [
+                        'user_id' => $row->id
+                    ];
+
+                    $UserSessionToken = new \Model\Token;
+                    $UserSessionToken->storeToken($tokenData); 
+        
+                    // Rediriger vers la page d'accueil
                     redirect("home");
-                }else {
+                } else {
+                    // Si le mot de passe est incorrect
                     $this->errors[$this->loginUniqueColumn] = "Wrong $this->loginUniqueColumn or password";
                 }
-            }else {
+            } else {
+                // Si l'utilisateur n'existe pas
                 $this->errors[$this->loginUniqueColumn] = "Wrong $this->loginUniqueColumn or password";
             }
-
         }
+        
     }
