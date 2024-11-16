@@ -22,13 +22,28 @@
         protected $table = "user_session_token";
 
 
-        public function generateToken(): string {
+        /**
+         * Génère un token d'accès
+         * @return string
+         */
+        private function generateToken(): string {
             $token = bin2hex(random_bytes(32)); 
             return $token;
         }
 
 
+        /**
+         * Stocke un token d'accès
+         * @param array $additionalData Données supplémentaires à stocker avec le token
+         * @return void
+         * 
+         */
         public function storeToken($additionalData): void {
+            // Vérifier si l'ID de l'utilisateur est valide et numérique
+            if (!isset($additionalData['user_id']) || !is_numeric($additionalData['user_id'])) {
+                throw new \InvalidArgumentException("Invalid user ID provided.");
+            }
+
             $token = $this->generateToken();
 
             $ip_address = filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP);
@@ -38,7 +53,7 @@
 
             $created_at = date('Y-m-d H:i:s');
             $updated_at = $created_at;
-            $expires_at = date('Y-m-d H:i:s', strtotime('+1 hour')); // Expiration dans 1 heure
+            $expires_at = date('Y-m-d H:i:s', strtotime('+1 hour')); // Expiration +1 heure
 
             // Préparer les données à insérer
             $data = [
@@ -49,18 +64,48 @@
                 'ip_address' => $ip_address,
             ] + $additionalData; // ex: ['user_id' => 1]
 
-            $this->insert($data);
-            show($data);
+            $userId = $additionalData['user_id'];
+            $existingToken  = $this->findOneBy(['user_id' => $userId]);
+
+            if ($existingToken  === null) {
+                // Si l'utilisateur n'a pas de token
+                $this->insert($data);
+
+            } elseif ($this->isTokenExpired($existingToken->expires_at)) {
+                // Si le token a expiré, mettre à jour l'existant
+                $this->update($userId, $data, 'user_id');
+            } 
         }
 
 
+        /**
+         * Révoque un token d'accès
+         * @param int $userId ID de l'utilisateur
+         */
         public function revokeToken(int $userId): void {
-            // Préparer les données pour invalider le token
-            $data = [
-                'expires_at' => date('Y-m-d H:i:s'), // Marquer comme expiré
-            ];
-        
-            // Appeler la méthode update pour marquer tous les tokens de cet utilisateur comme expirés
-            $this->update($userId, $data, 'user_id');
+            if ($this->findOneBy(['user_id' => $userId]) !== null) {
+                $this->update($userId, ['expires_at' => date('Y-m-d H:i:s')], 'user_id');
+            }
+        }
+
+
+        /**
+         * Vérifie si un token est valide
+         * @param string $token Token à vérifier
+         * @return bool retourne true si le token existe et n'a pas expiré
+         */
+        public function isTokenValid(string $token): bool {
+            $existingToken = $this->findOneBy(['token' => $token]);
+            return $existingToken !== null && !$this->isTokenExpired($existingToken->expires_at); 
+        }
+    
+
+        /**
+         * Vérifie si un token a expiré
+         * @param string $expiresAt Date d'expiration du token
+         * @return bool retourne true si la date d'expiration est inférieure à la date actuelle
+         */
+        private function isTokenExpired(string $expiresAt): bool {
+            return strtotime($expiresAt) < time();
         }
     }

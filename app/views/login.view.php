@@ -123,6 +123,8 @@
 				<label for="floatingPassword">Password</label>
 			</div>
 			<div><?= $user->getError('password') ?></div>
+			<?php
+			show($_SESSION); ?>
 
 			<!--
 			<div class="form-check text-start my-3">
