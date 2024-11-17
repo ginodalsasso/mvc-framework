@@ -11,6 +11,13 @@
         use MainController;
 
         public function index() {
+            // // Vérifier si l'utilisateur est déjà authentifié
+            // $session = new \Core\Session();
+
+            // if ($session->is_logged_in()) {
+            //     redirect("home");
+            //     return;
+            // }
 
             $data['user'] = new \Model\User; // Instancie le modèle User sans le use
             $request = new \Core\Request;

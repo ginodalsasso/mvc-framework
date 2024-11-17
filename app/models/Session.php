@@ -73,7 +73,7 @@
                 $userId = $_SESSION[$this->userKey]->id ?? null; // Récupérer l'ID de l'utilisateur
         
                 if ($userId) {
-                    // Révoquer le token actif
+                    // Révoquer le token actif afin qu'il ne puisse plus être utilisé
                     $token = new \Model\Token();
                     $token->revokeToken($userId);
                 }
@@ -86,16 +86,27 @@
         }
         
 
-
         // Méthode pour vérifier si l'utilisateur est connecté
-        public function is_logged_in():bool {
-
-            $this -> start_session(); // Démarrage de la session
-
-            if(!empty($_SESSION[$this->userKey])) { // Si les données de l'utilisateur existent dans la session
-                return true; 
+        public function is_logged_in(): bool {
+            $this->start_session();
+        
+            if (!empty($_SESSION[$this->userKey])) {
+                $userId = $_SESSION[$this->userKey]->id ?? null;
+        
+                if ($userId) {
+                    // Vérifier si le token de session est valide
+                    $tokenModel = new \Model\Token();
+                    $token = $tokenModel->findOneBy(['user_id' => $userId]);
+        
+                    if ($token && !$tokenModel->isTokenExpired($token->expires_at)) { 
+                        return true; // Token valide
+                    }
+        
+                    // // Si le token est expiré, déconnecter l'utilisateur
+                    $this->logout();
+                }
             }
-            return false; // On retourne false si les données de l'utilisateur n'existent pas
+            return false;
         }
 
 

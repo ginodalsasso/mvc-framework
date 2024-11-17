@@ -72,14 +72,12 @@
                     $userSessionToken = new \Model\Token;
                     $existingToken = $userSessionToken->findOneBy(['user_id' => $row->id]);
 
-                    // Vérifier si un token existe et est valide
                     if ($existingToken && $userSessionToken->isTokenValid($existingToken->token)) {
                         // Token valide, rediriger directement
                         redirect("home");
                         return;
-                    }
-        
-                    // Révoquer les anciens tokens si nécessaire
+                    }             
+                    
                     if ($existingToken) {
                         $userSessionToken->revokeToken($row->id);
                     }
@@ -103,5 +101,4 @@
                 $this->errors[$this->loginUniqueColumn] = "Wrong $this->loginUniqueColumn or password";
             }
         }
-        
     }

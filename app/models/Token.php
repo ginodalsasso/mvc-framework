@@ -67,12 +67,23 @@
             $userId = $additionalData['user_id'];
             $existingToken  = $this->findOneBy(['user_id' => $userId]);
 
-            if (!$existingToken || !isset($existingToken->expires_at)) {
-                // Si aucun token n'existe ou si l'attribut expires_at est manquant, insérer un nouveau token
+            if (!$existingToken) {
+                // Générer un nouveau token si aucun n'existe
+                $data['token'] = $this->generateToken();
+                $data['created_at'] = $created_at;
                 $this->insert($data);
+
             } elseif ($this->isTokenExpired($existingToken->expires_at)) {
-                // Si le token a expiré, mettre à jour l'existant
+                // Si le token a expiré, générer un nouveau token et mettre à jour l'existant
+                $data['token'] = $this->generateToken(); // Générer un nouveau token
                 $this->update($userId, $data, 'user_id');
+                
+            } else {
+                // Si le token est encore valide, prolonger simplement sa durée de validité
+                $this->update($userId, [
+                    'expires_at' => $expires_at,
+                    'updated_at' => $updated_at,
+                ], 'user_id');
             }
         }
 
@@ -87,22 +98,33 @@
 
 
         /**
-         * Vérifie si un token est valide
+         * Vérifie si un token est valide pour que
          * @param string $token Token à vérifier
-         * @return bool retourne true si le token existe et n'a pas expiré
+         * @return bool
          */
         public function isTokenValid(string $token): bool {
             $existingToken = $this->findOneBy(['token' => $token]);
-            return $existingToken !== null && !$this->isTokenExpired($existingToken->expires_at); 
+        
+            if (!$existingToken) {
+                return false; // Le token n'existe pas
+            }
+        
+            if ($this->isTokenExpired($existingToken->expires_at)) {
+                // Révoquer automatiquement le token expiré
+                $this->revokeToken($existingToken->user_id);
+                return false;
+            }
+        
+            return true; // Le token est valide
         }
     
 
         /**
          * Vérifie si un token a expiré
          * @param string $expiresAt Date d'expiration du token
-         * @return bool retourne true si le token a expiré
+         * @return bool retourne true si le token a expiré ou vide
          */
-        private function isTokenExpired(?string $expiresAt): bool {
+        public function isTokenExpired(?string $expiresAt): bool {
             return empty($expiresAt) || strtotime($expiresAt) < time();
         }
     }
