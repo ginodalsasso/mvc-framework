@@ -23,7 +23,6 @@
         protected $validationRules = [
             "email" => [
                 "email", 
-                "unique",
                 "required",
             ],
             "username" => [
@@ -33,6 +32,7 @@
             ],
             "password" => [
                 "not_less_than_8_chars",
+                // "password_regex",
                 "required",
             ]
         ];
@@ -56,6 +56,11 @@
 
 
         public function login($data) {
+
+            if (!$this->validate($data)) {
+                show($this->errors);
+                return;
+            }
             // Rechercher l'utilisateur dans la base de données
             $row = $this->findOneBy([ // ex: findOneBy(['email' => $data['email']])
                 $this->loginUniqueColumn => $data[$this->loginUniqueColumn]

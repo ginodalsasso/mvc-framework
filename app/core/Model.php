@@ -250,6 +250,11 @@
                                     $this->errors[$column] = ucfirst($column) . " must be at least 8 characters"; 
                                 }
                                 break;
+                            case 'password_regex':
+                                if(!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/", $data[$column])){ // Vérifie si la chaîne contient au moins 8 caractères, une lettre minuscule, une lettre majuscule et un chiffre
+                                    $this->errors[$column] = ucfirst($column) . " must contain at least 8 characters, one lowercase letter, one uppercase letter and one number"; 
+                                }
+                                break;
                             case 'unique':
                                 $key = $this->getPrimaryKey();
                                 if(!empty($data[$key])) {
