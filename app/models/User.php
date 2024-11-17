@@ -77,11 +77,6 @@
                         redirect("home");
                         return;
                     }             
-                    
-                    if ($existingToken) {
-                        $userSessionToken->revokeToken($row->id);
-                    }
-
                     // Générer un token pour l'utilisateur
                     $tokenData = [
                         'user_id' => $row->id

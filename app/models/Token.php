@@ -44,8 +44,6 @@
                 throw new \InvalidArgumentException("Invalid user ID provided.");
             }
 
-            $token = $this->generateToken();
-
             $ip_address = filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP);
             if (!$ip_address) {
                 throw new \Exception("IP adress is invalid");
@@ -57,8 +55,6 @@
 
             // Préparer les données à insérer
             $data = [
-                'token' => $token,
-                'created_at' => $created_at,
                 'updated_at' => $updated_at,
                 'expires_at' => $expires_at,
                 'ip_address' => $ip_address,
@@ -67,23 +63,26 @@
             $userId = $additionalData['user_id'];
             $existingToken  = $this->findOneBy(['user_id' => $userId]);
 
-            if (!$existingToken) {
-                // Générer un nouveau token si aucun n'existe
-                $data['token'] = $this->generateToken();
-                $data['created_at'] = $created_at;
-                $this->insert($data);
-
-            } elseif ($this->isTokenExpired($existingToken->expires_at)) {
-                // Si le token a expiré, générer un nouveau token et mettre à jour l'existant
-                $data['token'] = $this->generateToken(); // Générer un nouveau token
-                $this->update($userId, $data, 'user_id');
-                
-            } else {
-                // Si le token est encore valide, prolonger simplement sa durée de validité
+            if ($existingToken && !$this->isTokenExpired($existingToken->expires_at)) {
+                // Si le token est encore valide, prolonger sa durée de validité
                 $this->update($userId, [
                     'expires_at' => $expires_at,
-                    'updated_at' => $updated_at,
+                    'updated_at' => $created_at,
                 ], 'user_id');
+
+                return;
+            }
+        
+            // Si aucun token n'existe ou si le token a expiré, générer un nouveau token
+            $data['token'] = $this->generateToken();
+            $data['created_at'] = $created_at;
+        
+            if ($existingToken) {
+                // Mettre à jour un token expiré
+                $this->update($userId, $data, 'user_id');
+            } else {
+                // Insérer un nouveau token
+                $this->insert($data);
             }
         }
 
