@@ -14,4 +14,19 @@
 
     $thunder = new \Thunder\Thunder(); // on instancie Thunder
 
-    call_user_func_array([$thunder, 'make'], []); // on appelle la méthode correspondant à l'action
+    if(empty($action)) {
+
+        call_user_func_array([$thunder, 'help'], []); // on appelle la méthode make de Thunder
+    } else {
+
+        $parts = explode(':', $action); // on sépare le nom de la méthode et les paramètres ex: make:controller
+
+        if(is_callable([$thunder, $parts[0]])) { // is_callable permet de vérifier si la méthode existe dans l'objet Thunder
+
+            call_user_func_array([$thunder, $parts[0]], []); // on appelle la méthode de Thunder ex: make
+        } else {
+
+            echo "\n\rThis action does not exist. Please see below for commands";
+            call_user_func_array([$thunder, 'help'], []); 
+        }
+    }

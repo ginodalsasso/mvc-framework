@@ -8,13 +8,28 @@
     defined('CPATH') OR exit('Access Denied!');
 
     class Thunder {
+
+        private $version = '1.0.0';
+
+
+        public function db(){
+            echo "\n\rdb function\n\r";
+        }
+
+
         public function make(){
             echo "\n\rmake function\n\r";
         }
 
+
+        public function migrate(){
+            echo "\n\rmigrate function\n\r";
+        }
+
+
         public function help(){
             echo "
-                Thunder v$version Commande Line Tool
+                Thunder v$this->version Commande Line Tool
 
                 Database 
                     db:create          Create a new database schema.
