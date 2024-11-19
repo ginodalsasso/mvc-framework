@@ -1,0 +1,17 @@
+<?php 
+
+    if (php_sapi_name() !== 'cli') {
+        die('This script can only be run from the command line.');
+    }
+
+    define('DS' , DIRECTORY_SEPARATOR); // séparateur de répertoire
+    define('CPATH' , __DIR__ . DS); // ex: /var/www/html/thunder/
+    chdir(CPATH); // on se place dans le répertoire du script
+
+    $action = $argv[1] ?? 'help'; // l'action par défaut est help
+
+    require 'app' .DS. 'thunder' .DS. 'init.php';
+
+    $thunder = new \Thunder\Thunder(); // on instancie Thunder
+
+    call_user_func_array([$thunder, 'make'], []); // on appelle la méthode correspondant à l'action

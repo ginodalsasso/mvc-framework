@@ -3,6 +3,8 @@
     //$user = new Model\User;
     namespace Model;
 
+    defined('ROOTPATH') OR exit('Access Denied!');
+
     class User {
 
         use Model; // Utilisation du trait Model pour les méthodes de base de données
