@@ -19,16 +19,25 @@
 
         public function make($file, $mode = null, $classname = null){
 
+            // Vérifie si le mode est défini
             if(empty($classname)) 
                 die("\n\rPlease provide a name for the $mode\n\r");
+            
+            // Nettoie le nom de la classe
+            $classname = preg_replace('/[^a-zA-Z0-9_]+/', '', $classname); 
 
+            // Check si le nom de la classe commence par un chiffre ou un underscore
+            if(preg_match('/^[^a-zA-Z_]+/', $classname)) 
+                die("\n\rClassname must only contain letters, numbers and underscores\n\r");
+
+            // Vérifie si le fichier existe déjà
             $filename = 'app' .DS. 'controllers' .DS. ucfirst($classname) .'.php';
             if(file_exists($filename)) 
                 die("\n\r$filename already exists!\n\r");
 
             switch ($mode) {
                 case 'make:controller':
-                    $sample_file = file_get_contents('app' .DS. 'thunder' .DS. 'samples' .DS. 'controller-sample.php'); // Lire le contenu du 
+                    $sample_file = file_get_contents('app' .DS. 'thunder' .DS. 'samples' .DS. 'controller-sample.php'); // Lire le contenu du controller
                     $sample_file = preg_replace('/\{CLASSNAME\}/', ucfirst($classname), $sample_file); // Remplace {CLASSNAME} par le nom de la classe
                     $sample_file = preg_replace('/\{classname\}/', strtolower($classname), $sample_file); // Remplace {classname} par le nom de la classe
 
