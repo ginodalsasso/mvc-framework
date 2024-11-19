@@ -1,10 +1,16 @@
 <?php 
+    /**
+     * Thunder CLI
+     * 
+     * Ce script permet de lancer Thunder en ligne de commande
+     */
 
     if (php_sapi_name() !== 'cli') {
         die('This script can only be run from the command line.');
     }
 
     define('DS' , DIRECTORY_SEPARATOR); // séparateur de répertoire
+
     define('CPATH' , __DIR__ . DS); // ex: /var/www/html/thunder/
     chdir(CPATH); // on se place dans le répertoire du script
 
@@ -23,7 +29,7 @@
 
         if(is_callable([$thunder, $parts[0]])) { // is_callable permet de vérifier si la méthode existe dans l'objet Thunder
 
-            call_user_func_array([$thunder, $parts[0]], []); // on appelle la méthode de Thunder ex: make
+            call_user_func_array([$thunder, $parts[0]], $argv); // on appelle la méthode de Thunder ex: make:controller make=$parts[0], controller=$argv
         } else {
 
             echo "\n\rThis action does not exist. Please see below for commands";

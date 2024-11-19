@@ -17,8 +17,40 @@
         }
 
 
-        public function make(){
-            echo "\n\rmake function\n\r";
+        public function make($file, $mode = null, $classname = null){
+
+            if(empty($classname)) 
+                die("\n\rPlease provide a name for the $mode\n\r");
+
+            $filename = 'app' .DS. 'controllers' .DS. ucfirst($classname) .'.php';
+            if(file_exists($filename)) 
+                die("\n\r$filename already exists!\n\r");
+
+            switch ($mode) {
+                case 'make:controller':
+                    $sample_file = file_get_contents('app' .DS. 'thunder' .DS. 'samples' .DS. 'controller-sample.php'); // Lire le contenu du 
+                    $sample_file = preg_replace('/\{CLASSNAME\}/', ucfirst($classname), $sample_file); // Remplace {CLASSNAME} par le nom de la classe
+                    $sample_file = preg_replace('/\{classname\}/', strtolower($classname), $sample_file); // Remplace {classname} par le nom de la classe
+
+                    if(file_put_contents($filename, $sample_file)){  // Crée le fichier du contrôleur
+                        die ("\n\r$classname created successfully!\n\r");
+                    } else {
+                        die ("\n\rAn error occured while creating $classname\n\r");
+                    };
+                    break;
+                case 'make:model':
+                    echo "\n\rmodel function\n\r";
+                    break;
+                case 'make:migration':
+                    echo "\n\rmigration function\n\r";
+                    break;
+                case 'make:seeder':
+                    echo "\n\rseeder function\n\r";
+                    break;
+                default:
+                    die("\n\rUnknown 'make' command");
+                    break;
+            }
         }
 
 
@@ -41,9 +73,10 @@
                     migrate:rollback   Runs the 'down'  method for a migration in the specified plugin folder.
                     
                 Generators
-                    make:migration    Create a new migration file.
-                    make:model        Create a new model file.
-                    make:seeder       Create a new seeder file.
+                    make:controller    Create a new controller file.
+                    make:model         Create a new model file.
+                    make:migration     Create a new migration file.
+                    make:seeder        Create a new seeder file.
             ";
         }
     }
