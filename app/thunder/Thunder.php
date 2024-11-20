@@ -12,12 +12,67 @@
         private $version = '1.0.0';
 
 
-        public function db(){
-            echo "\n\rdb function\n\r";
+        public function db($argv){
+
+            $mode =         $argv[1] ?? null; // Récupère le mode
+            $param1 =    $argv[2] ?? null; // Récupère le nom de la classe
+
+            switch ($mode) {
+                case 'db:create':
+                    // Vérifie si param1 est défini
+                    if(empty($param1)) 
+                        die("\n\rPlease provide a database name\n\r");
+                    
+                    $db = new \Model\Database; // Crée une nouvelle instance de la classe Database
+                    $query = "CREATE DATABASE IF NOT EXISTS" . $param1; // Crée la base de données
+                    $db->query($query);
+
+                    die ("\n\rDatabase created successfully!\n\r");
+                    break;
+
+                case 'db:table':
+                    // Vérifie si param1 est défini
+                    if(empty($param1)) 
+                        die("\n\rPlease provide a table name\n\r");
+                    
+                    $db = new \Model\Database; // Crée une nouvelle instance de la classe Database
+                    $query = "DESCRIBE" . $param1; // Supprime la base de données
+                    $result = $db->query($query);
+
+                    if($result){
+                        
+                        print_r($result); // Affiche les informations sur la table
+                    } else {
+                        echo "\n\rTable $param1 not found!\n\r";
+                    }
+                    die ();
+                    break;
+
+                case 'db:drop':
+                    // Vérifie si param1 est défini
+                    if(empty($param1)) 
+                        die("\n\rPlease provide a database name\n\r");
+                    
+                    $db = new \Model\Database; // Crée une nouvelle instance de la classe Database
+                    $query = "DROP DATABASE" . $param1; // Supprime la base de données
+                    $db->query($query);
+
+                    die ("\n\rDatabase deleted successfully!\n\r");
+                    break;
+                case 'db:seed':
+                    echo "\n\rseeder function\n\r";
+                    break;
+                default:
+                    die("\n\rUnknown command $argv[1]");
+                    break;
+            }
         }
 
 
-        public function make($file, $mode = null, $classname = null){
+        public function make($argv){
+
+            $mode =         $argv[1] ?? null; // Récupère le mode
+            $classname =    $argv[2] ?? null; // Récupère le nom de la classe
 
             // Vérifie si le mode est défini
             if(empty($classname)) 
@@ -66,7 +121,7 @@
                         die ("\n\rAn error occured while creating $classname\n\r");
                     };
                     break;
-                    
+
                 case 'make:migration':
                     echo "\n\rmigration function\n\r";
                     break;
@@ -74,7 +129,7 @@
                     echo "\n\rseeder function\n\r";
                     break;
                 default:
-                    die("\n\rUnknown 'make' command");
+                    die("\n\rUnknown command $argv[1]");
                     break;
             }
         }
