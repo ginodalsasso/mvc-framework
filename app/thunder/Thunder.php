@@ -45,6 +45,7 @@
                     } else {
                         echo "\n\rTable $param1 not found!\n\r";
                     }
+
                     die ();
                     break;
 
@@ -59,9 +60,11 @@
 
                     die ("\n\rDatabase deleted successfully!\n\r");
                     break;
+
                 case 'db:seed':
                     echo "\n\rseeder function\n\r";
                     break;
+                    
                 default:
                     die("\n\rUnknown command $argv[1]");
                     break;
@@ -125,9 +128,11 @@
                 case 'make:migration':
                     echo "\n\rmigration function\n\r";
                     break;
+
                 case 'make:seeder':
                     echo "\n\rseeder function\n\r";
                     break;
+                    
                 default:
                     die("\n\rUnknown command $argv[1]");
                     break;

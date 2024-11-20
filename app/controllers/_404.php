@@ -9,6 +9,8 @@
         use MainController;
 
         public function index() {
-            echo "404 Page not Not Found";
+            // echo "404 Page not Not Found";
+
+            $this->view('404');
         }
     }

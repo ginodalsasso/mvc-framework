@@ -35,23 +35,26 @@
                 $this->controller = ucfirst($URL[0]); // Définit le nom du contrôleur d'après l'URL
                 unset($URL[0]); // Supprime le premier élément du tableau
             } else {
-                // Si le fichier du contrôleur n'existe pas, cherche dans un sous-dossier
-                $filename = "../app/controllers/" . ucfirst($URL[0]) . "/" . ucfirst($URL[0]) . ".php";
+                // Si le fichier du contrôleur n'existe pas, on utilise le contrôleur `_404`
+                $this->controller = "_404";
+                $filename = "../app/controllers/_404.php";
 
                 if (file_exists($filename)) {
-                    require $filename; // Inclut le fichier du contrôleur dans le sous-dossier
-                    $this->controller = ucfirst($URL[0]); // Définit le nom du contrôleur
-                } else {
-                    // Si aucun fichier n'est trouvé, définit le contrôleur par défaut pour la page 404
-                    $this->controller = "_404"; 
+                    require $filename; // Inclut le fichier du contrôleur 404
                 }
             }
 
-            $controller = new ('\Controller\\'.$this->controller);  // Instancie le contrôleur dynamiquement
+            // Instancie dynamiquement le contrôleur
+            $controllerClass = '\Controller\\' . $this->controller;
+            if (class_exists($controllerClass)) {
+                $controller = new $controllerClass();
+            } else {
+                die("Erreur: La classe du contrôleur '$controllerClass' est introuvable.");
+            }
 
             // Vérifie si la méthode spécifiée dans l'URL existe
-            if(!empty($URL[1])){
-                if(method_exists($controller, $URL[1])){
+            if (!empty($URL[1])) {
+                if (method_exists($controller, $URL[1])) {
                     $this->method = $URL[1]; 
                     unset($URL[1]);
                 }

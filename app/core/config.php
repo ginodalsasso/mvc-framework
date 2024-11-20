@@ -1,6 +1,7 @@
 <?php
     defined('ROOTPATH') OR exit("Access Denied!");
 
+    // Si le serveur est en local ou en ligne de commande (CLI) ou si le serveur est en ligne
     if((empty($_SERVER["SERVER_NAME"]) && php_sapi_name() == 'cli') || (!empty($_SERVER["SERVER_NAME"]) && $_SERVER["SERVER_NAME"] == "localhost")) {  
         // database configuration
         define ('DBNAME', 'my_db');
