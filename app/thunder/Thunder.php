@@ -30,13 +30,13 @@
             if(preg_match('/^[^a-zA-Z_]+/', $classname)) 
                 die("\n\rClassname must only contain letters, numbers and underscores\n\r");
 
-            // Vérifie si le fichier existe déjà
-            $filename = 'app' .DS. 'controllers' .DS. ucfirst($classname) .'.php';
-            if(file_exists($filename)) 
-                die("\n\r$filename already exists!\n\r");
-
             switch ($mode) {
                 case 'make:controller':
+                    // Vérifie si le fichier existe déjà
+                    $filename = 'app' .DS. 'controllers' .DS. ucfirst($classname) .'.php';
+                    if(file_exists($filename)) 
+                        die("\n\r$filename already exists!\n\r");
+
                     $sample_file = file_get_contents('app' .DS. 'thunder' .DS. 'samples' .DS. 'controller-sample.php'); // Lire le contenu du controller
                     $sample_file = preg_replace('/\{CLASSNAME\}/', ucfirst($classname), $sample_file); // Remplace {CLASSNAME} par le nom de la classe
                     $sample_file = preg_replace('/\{classname\}/', strtolower($classname), $sample_file); // Remplace {classname} par le nom de la classe
@@ -47,9 +47,26 @@
                         die ("\n\rAn error occured while creating $classname\n\r");
                     };
                     break;
+
                 case 'make:model':
-                    echo "\n\rmodel function\n\r";
+                    // Vérifie si le fichier existe déjà
+                    $filename = 'app' .DS. 'models' .DS. ucfirst($classname) .'.php';
+                    if(file_exists($filename)) 
+                        die("\n\r$filename already exists!\n\r");
+                    
+                    $sample_file = file_get_contents('app' .DS. 'thunder' .DS. 'samples' .DS. 'model-sample.php'); // Lire le contenu du model
+                    $sample_file = preg_replace('/\{CLASSNAME\}/', ucfirst($classname), $sample_file); // Remplace {CLASSNAME} par le nom de la classe
+                    
+                    if(!preg_match('/s$/', $classname)) // Ajoute un 's' à la fin du nom de la table si ce n'est pas déjà le cas
+                        $sample_file = preg_replace('/\{table\}/', strtolower($classname) .'s', $sample_file);
+                    
+                    if(file_put_contents($filename, $sample_file)){  // Crée le fichier du modèle
+                        die ("\n\r$classname created successfully!\n\r");
+                    } else {
+                        die ("\n\rAn error occured while creating $classname\n\r");
+                    };
                     break;
+                    
                 case 'make:migration':
                     echo "\n\rmigration function\n\r";
                     break;
