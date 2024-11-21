@@ -36,7 +36,7 @@
                         die("\n\rPlease provide a table name\n\r");
                     
                     $db = new Database; // Crée une nouvelle instance de la classe Database
-                    $query = "DESCRIBE " . $param1; // Supprime la base de données
+                    $query = "DESCRIBE " . $param1; // Récupère les informations sur la table
                     $result = $db->query($query);
 
                     if($result){
