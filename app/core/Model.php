@@ -215,8 +215,14 @@
 
             $this->errors = [];
 
-            if(!empty($this->validationRules)){ // Si des règles de validation sont définies
-                
+            // Vérifie si les règles de validation sont définies 
+            if(!empty($this->primaryKey) && !empty($data[$data[$this->primaryKey]])){
+                $validationRules = $this->onUpdateValidationRules;
+            } else {
+                $validationRules = $this->onInsertValidationRules;
+            }
+            
+            if(!empty($validationRules)){
                 foreach($this->validationRules as $column => $rules){ // Pour chaque $column = email, username, password...
                     
                     if (!isset($data[$column]))

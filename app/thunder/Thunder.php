@@ -23,8 +23,8 @@
                     if(empty($param1)) 
                         die("\n\rPlease provide a database name\n\r");
                     
-                    $db = new \Model\Database; // Crée une nouvelle instance de la classe Database
-                    $query = "CREATE DATABASE IF NOT EXISTS" . $param1; // Crée la base de données
+                    $db = new Database; // Crée une nouvelle instance de la classe Database
+                    $query = "CREATE DATABASE IF NOT EXISTS " . $param1; // Crée la base de données
                     $db->query($query);
 
                     die ("\n\rDatabase created successfully!\n\r");
@@ -35,8 +35,8 @@
                     if(empty($param1)) 
                         die("\n\rPlease provide a table name\n\r");
                     
-                    $db = new \Model\Database; // Crée une nouvelle instance de la classe Database
-                    $query = "DESCRIBE" . $param1; // Supprime la base de données
+                    $db = new Database; // Crée une nouvelle instance de la classe Database
+                    $query = "DESCRIBE " . $param1; // Supprime la base de données
                     $result = $db->query($query);
 
                     if($result){
@@ -54,8 +54,8 @@
                     if(empty($param1)) 
                         die("\n\rPlease provide a database name\n\r");
                     
-                    $db = new \Model\Database; // Crée une nouvelle instance de la classe Database
-                    $query = "DROP DATABASE" . $param1; // Supprime la base de données
+                    $db = new Database; // Crée une nouvelle instance de la classe Database
+                    $query = "DROP DATABASE " . $param1; // Supprime la base de données
                     $db->query($query);
 
                     die ("\n\rDatabase deleted successfully!\n\r");
@@ -132,7 +132,7 @@
                 case 'make:seeder':
                     echo "\n\rseeder function\n\r";
                     break;
-                    
+
                 default:
                     die("\n\rUnknown command $argv[1]");
                     break;
