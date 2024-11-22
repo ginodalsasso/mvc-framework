@@ -126,7 +126,23 @@
                     break;
 
                 case 'make:migration':
-                    echo "\n\rmigration function\n\r";
+                    $folder = 'app' .DS. 'migrations' .DS;
+                    if(!file_exists($folder)) 
+                        mkdir($folder, 0777, true); // Crée le dossier si il n'existe pas
+
+                    $filename = $folder . date('jS_M_Y_H_i_s_') . ucfirst($classname) .'.php'; // ex: 1st_Jan_2021_12_00_00_User.php
+                    if(file_exists($filename)) 
+                        die("\n\r$filename already exists!\n\r");
+
+                    $sample_file = file_get_contents('app' .DS. 'thunder' .DS. 'samples' .DS. 'migration-sample.php'); // Lire le contenu de migration
+                    $sample_file = preg_replace('/\{CLASSNAME\}/', ucfirst($classname), $sample_file); // Remplace {CLASSNAME} par le nom de la classe
+                    $sample_file = preg_replace('/\{classname\}/', strtolower($classname), $sample_file); 
+
+                    if(file_put_contents($filename, $sample_file)){  // Crée le fichier du modèle
+                        die ("\n\rMigration file created successfully!". basename($filename) . "\n\r"); 
+                    } else {
+                        die ("\n\rAn error occured while creating migration file !\n\r");
+                    };
                     break;
 
                 case 'make:seeder':
@@ -140,8 +156,24 @@
         }
 
 
-        public function migrate(){
-            echo "\n\rmigrate function\n\r";
+        public function migrate($argv){
+            $mode =         $argv[1] ?? null;
+            $filename =     $argv[2] ?? null; 
+            $filename = 'app' .DS. 'migrations' .DS. $filename;
+
+            if(file_exists($filename)) {
+                require $filename;
+
+                preg_match("/[a-zA-Z]+\.php$/", $filename, $match);
+                $classname = str_replace(".php", "", $match[0]);
+
+                $myClass = new ("Thunder\\$classname");
+                $myClass->up();
+            } else {
+                die("\n\rMigration file not found!\n\r");
+            }
+
+            echo "\n\rMigration completed successfully!" . basename($filename) . "\n\r";
         }
 
 
@@ -163,6 +195,9 @@
                     make:model         Create a new model file.
                     make:migration     Create a new migration file.
                     make:seeder        Create a new seeder file.
+                
+                Other
+                    list:migrations    Display a list of all available migrations.
             ";
         }
     }

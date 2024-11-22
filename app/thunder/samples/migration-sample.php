@@ -1,11 +1,10 @@
 <?php
 
-    //$user = new Migration\{CLASSNAME};
-    namespace Migration;
+    namespace Thunder;
 
     defined('ROOTPATH') OR exit('Access Denied!');
 
-    class {CLASSNAME} {
+    class {CLASSNAME} extends Migration {
 
         use Migration; // 
 
@@ -19,9 +18,23 @@
             // $this->addForeignKey();
 
             $this->addData();
-            $this->insert();
+            $this->insertData();
             $this->createTable();
             */
+
+            /** Creer une table **/
+            $this->addColumn('id int(11) NOT NULL AUTO_INCREMENT');
+            $this->addColumn('date_created datetime NULL');
+            $this->addColumn('date_updated datetime NULL');
+            $this->addPrimaryKey('id');
+
+            $this->createTable('{classname}');
+
+            /** insert data **/
+            $this->addData('date_created',date("Y-m-d H:i:s"));
+            $this->addData('date_updated',date("Y-m-d H:i:s"));
+
+            $this->insertData('{classname}');
         }
 
 
