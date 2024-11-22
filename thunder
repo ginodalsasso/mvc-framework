@@ -3,6 +3,7 @@
      * Thunder CLI
      * 
      * Ce script permet de lancer Thunder en ligne de commande
+     * ex: php thunder make:controller
      */
 
     if (php_sapi_name() !== 'cli') { // on vérifie que le script est bien lancé en ligne de commande
