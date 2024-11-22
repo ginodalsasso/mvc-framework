@@ -5,9 +5,7 @@
     defined('ROOTPATH') OR exit("Access Denied!");
 
     
-    class Home {
-
-        use MainController;
+    class Home extends MainController {
 
         public function index() {
             

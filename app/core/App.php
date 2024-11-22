@@ -20,6 +20,7 @@
             return $URL;
         }
 
+        
         /**
          * Charge le contrôleur en fonction de l'URL, ou affiche une page 404 si le contrôleur n'est pas trouvé.
          */

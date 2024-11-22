@@ -6,9 +6,7 @@
 
     // use Model\User; // Importe le modèle User pour l'instancier $user = new User;
 
-    class Register {
-
-        use MainController;
+    class Register extends MainController {
 
         public function index() {
 

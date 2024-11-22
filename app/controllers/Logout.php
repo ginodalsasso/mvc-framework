@@ -4,9 +4,7 @@
 
     defined('ROOTPATH') OR exit("Access Denied!");
 
-    class Logout {
-
-        use MainController;
+    class Logout extends MainController {
 
         public function index() {
 

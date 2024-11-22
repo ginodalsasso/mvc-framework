@@ -4,9 +4,14 @@
 
     defined('ROOTPATH') OR exit("Access Denied!");
 
-    Trait MainController {
+    abstract class MainController {
         
-        // Méthode permettant de charger une vue
+        /**
+         * Méthode permettant de charger une vue.
+         *
+         * @param string $name Nom de la vue
+         * @param array $data Données à passer à la vue
+         */        
         public function view($name, $data = []){
             if(!empty($data))
                 extract($data); // On extrait les données pour les rendre accessibles dans la vue

@@ -4,12 +4,9 @@
 
     defined('ROOTPATH') OR exit("Access Denied!");
 
-    class _404 {
-        
-        use MainController;
+    class _404 extends MainController {
 
         public function index() {
-            // echo "404 Page not Not Found";
 
             $this->view('404');
         }
