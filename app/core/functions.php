@@ -29,7 +29,9 @@
     }
 
 
-    // Fonction pour afficher les données sous forme de tableau
+    /**
+     * @param mixed $stuff Les données à afficher.
+     */
     function show($stuff): void {
         echo "<pre>";
         print_r($stuff);
@@ -43,6 +45,10 @@
     }
 
 
+    /**
+     * Cette fonction redirige l'utilisateur vers une autre page.
+     * @param string $path Le chemin de la page de destination.
+     */
     function redirect($path): void {
         header("Location: ".ROOT."/".$path);
         die;
@@ -52,6 +58,7 @@
     /**
     * Cette fonction récupère un segment de l'URL en fonction de la clé fournie.
     * L'URL doit être au format 'page/section/action/id'.
+    * @param string|int $key La clé de l'URL à récupérer. ex: 'page', 'section', 'action', 'id'.
     * @return mixed La partie demandée de l'URL, ou null si elle n'existe pas.
      */
     function URL($key):mixed {
@@ -110,7 +117,10 @@
     }
 
 
-    // Fonction pour afficher les messages à l'utilisateur
+    /**
+     * Cette fonction stocke un message dans la session ou le récupère.
+     * @param string $msg Le message à afficher.
+     */
     function message(string $msg = null, bool $clear = false): mixed {
 
         $session = new Core\Session();
@@ -249,6 +259,7 @@
     /**
      * Supprime les images locales référencées dans le contenu HTML initial, qui ne sont plus présentes
      * dans le contenu mis à jour ou supprime toutes les images si aucun contenu mis à jour n'est fourni.
+     * @param string $content Le contenu HTML initial.
      */
     function delete_images_from_content(string $content, string $content_new = ""): void {
         if (empty($content_new)) {
