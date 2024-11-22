@@ -1,7 +1,18 @@
 <?php
     /**
-     * Migration class
+     * Classe Migration
+     * 
+     * Cette classe fournit des méthodes pour créer, supprimer des tables et insérer des données dans une base de données.
+     * 
+     * @method void createTable(string $table) Crée une table avec les colonnes, clés primaires, clés étrangères, clés uniques et clés spécifiées.
+     * @method void addColumn(string $text) Ajoute une colonne à la table.
+     * @method void addPrimaryKeys(string $key) Ajoute une clé primaire à la table.
+     * @method void addUniqueKeys(string $key) Ajoute une clé unique à la table.
+     * @method void addData(string $key, mixed $value) Ajoute des données à insérer dans la table.
+     * @method void dropTable(string $table) Supprime une table si elle existe.
+     * @method void insertData(string $table) Insère des données dans la table spécifiée.
      */
+
     namespace Thunder;
 
     defined('CPATH') OR exit('Access Denied!');
@@ -18,6 +29,11 @@
         protected $data         = [];
         
 
+        /**
+         * Crée une table dans la base de données si elle n'existe pas déjà.
+         *
+         * @param string $table Le nom de la table à créer.
+         */
         protected function createTable($table) {
             if(!empty($this->columns)){
 
@@ -80,7 +96,6 @@
         protected function addData($key, $value) {
             $this->data[$key] = $value; 
         }
-
 
         protected function dropTable($table) {
             $this->query('DROP TABLE IF EXISTS '.$table); 
