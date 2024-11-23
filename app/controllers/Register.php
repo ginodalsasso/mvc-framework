@@ -15,6 +15,8 @@
             $request = new \Core\Request;
             if($request->posted()){
                 $data['user']->signup($_POST);
+                
+                redirect("login");
             }
 
             $this->view("register", $data);

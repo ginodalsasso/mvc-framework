@@ -22,6 +22,8 @@
 
             if($request->posted()){
                 $data['user']->login($_POST);
+
+                redirect("home");
             }
             $this->view("login", $data);
         }

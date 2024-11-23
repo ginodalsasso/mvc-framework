@@ -13,6 +13,13 @@
             return $con;
         }
 
+
+        /**
+         * Insertion de données dans la base de données
+         * @param string $table
+         * @param array $data
+         * @return bool
+         */
         public function query($query, $data = []) {
             $con = $this->connect();
             $stmt = $con->prepare($query);
@@ -35,7 +42,15 @@
             return false;
         }
 
-        // récupérer une seule ligne de la base de données
+        /**
+         * Récupère une ligne de résultat d'une requête SQL.
+         *
+         * @param string $query La requête SQL à exécuter.
+         * @param array $data Les données à lier à la requête SQL (par défaut vide).
+         * exemple : $data = [':id' => 1];
+         * @return object|false Retourne un objet représentant la première ligne du résultat,
+         *                      ou false si la requête échoue ou si aucun résultat n'est trouvé.
+         */
         public function get_row($query, $data = []) {
             $con = $this->connect();
             $stmt = $con->prepare($query);

@@ -107,9 +107,6 @@
                     ];
 
                     $userSessionToken->storeToken($tokenData); 
-        
-                    // Rediriger vers la page d'accueil
-                    redirect("home");
 
                 } else {
                     // Si le mot de passe est incorrect
