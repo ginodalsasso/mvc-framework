@@ -4,7 +4,7 @@
 
     defined('ROOTPATH') OR exit("Access Denied!");
 
-    class _404 extends MainController {
+    class _404 extends AbstractController {
 
         public function index() {
 

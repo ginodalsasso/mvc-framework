@@ -21,8 +21,27 @@
             "password",
         ];
 
-        // déterminer les règles de validation des données voir la méthode validate dans Model.php (l'ordre des règles est important)
-        protected $validationRules = [
+
+        // Règles de validation lors d'un insert des données voir la méthode validate dans Model.php (l'ordre des règles est important)
+        protected $onInsertValidationRules = [
+            "email" => [
+                "email", 
+                "required",
+            ],
+            "username" => [
+                "alpha_numeric",
+                "unique",
+                "required",
+            ],
+            "password" => [
+                "not_less_than_8_chars",
+                // "password_regex",
+                "required",
+            ]
+        ];
+
+        // Règles de validation lors d'un update
+        protected $onUpdateValidationRules = [
             "email" => [
                 "email", 
                 "required",

@@ -61,7 +61,6 @@
         public function signup($data){
 
             if($this->validate($data)){
-                show($data);
 
                 $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT); // Hashage du mot de passe
 

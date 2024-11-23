@@ -4,7 +4,7 @@
 
     defined('ROOTPATH') OR exit("Access Denied!");
 
-    abstract class MainController {
+    abstract class AbstractController {
         
         /**
          * Méthode permettant de charger une vue.
@@ -13,8 +13,9 @@
          * @param array $data Données à passer à la vue
          */        
         public function view($name, $data = []){
-            if(!empty($data))
-                extract($data); // On extrait les données pour les rendre accessibles dans la vue
+            if (!empty($data) && is_array($data)) { // Si des données sont passées à la vue et que ce sont des tableaux
+                extract($data, EXTR_SKIP); // Extraction des variables du tableau
+            }
             
             $filename = "../app/views/" . $name . ".view.php"; // On récupère le nom du fichier
     

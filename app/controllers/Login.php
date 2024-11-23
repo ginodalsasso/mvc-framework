@@ -6,7 +6,7 @@
 
     // use Model\User; // Importe le modèle User pour l'instancier $user = new User;
 
-    class Login extends MainController {
+    class Login extends AbstractController {
 
         public function index() {
             // // Vérifier si l'utilisateur est déjà authentifié

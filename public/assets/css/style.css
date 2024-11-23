@@ -1,0 +1,56 @@
+:root {
+    --white-color: #F5F5F5;
+    --black-color: #0F0F0F;
+
+    --h1-fontsize: 60px;
+    --h2-fontsize: 45px;
+    --h3-fontsize: 30px;
+    --h4-fontsize: 20px;
+
+    --h1-fontsize-mobile: 40px;
+    --h2-fontsize-mobile: 36px;
+    --h3-fontsize-mobile: 28px;
+    --h4-fontsize-mobile: 20px;
+
+    --font-size: 18px;
+    --font-size-mobile: 16px;
+
+
+    --font-family: "Poppins", sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+.flex {
+    display: flex;
+}
+
+.block {
+    display: block;
+}
+
+
+/* Mobile */
+@media only screen and (max-width: 480px) {
+
+}
+
+
+/* Tablette  */
+@media only screen and (min-width: 481px) and (max-width: 1200px) {
+
+}
+
+
+/* PC */
+@media only screen and (min-width: 1201px) {
+
+}

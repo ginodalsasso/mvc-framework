@@ -7,9 +7,8 @@
     /**
      * {CLASSNAME} Controller
      */
-    class {CLASSNAME} {
+    class {CLASSNAME} extends AbstractController {
 
-        use MainController;
 
         public function index() {
             
