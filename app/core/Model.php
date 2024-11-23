@@ -30,7 +30,13 @@
         }
 
 
-        // Méthode pour récupérer des enregistrements avec des conditions WHERE
+        /**
+         * Trouve toutes les entrées de la table correspondant aux conditions spécifiées.
+         *
+         * @param array $data Conditions pour lesquelles les entrées doivent correspondre (key = value).
+         * @param array $data_not Conditions pour lesquelles les entrées ne doivent pas correspondre (key != value).
+         * @return array Résultats de la requête.
+         */
         public function findAllBy($data, $data_not = []) {
 
             // Récupération des clés des conditions 'data' et 'data_not'
@@ -66,11 +72,12 @@
 
 
         /**
-         *  SELECT * 
-         *   FROM users 
-         *   WHERE email = :email AND status != :status 
-         *   LIMIT 1 OFFSET 0;
-         * Méthode pour récupérer un seul enregistrement avec des conditions WHERE et LIMIT
+         * Trouve un enregistrement dans la table en fonction des conditions spécifiées.
+         *
+         * @param array $data Conditions pour lesquelles les valeurs doivent correspondre (key = value).
+         * @param array $data_not Conditions pour lesquelles les valeurs ne doivent pas correspondre (key != value).
+         * ex: $user->findOneBy(['email' => 'gino@ex.com']);
+         * @return array|false Retourne le premier enregistrement correspondant aux conditions, ou 'false' si aucun enregistrement n'est trouvé.
          */
         public function findOneBy($data, $data_not = []) {
             // Récupération des clés des conditions 'data' et 'data_not'
@@ -109,7 +116,14 @@
         }
 
 
-        // Méthode pour insérer un nouvel enregistrement dans la table
+        /**
+         * Insère des données dans la table de la base de données associée à ce modèle.
+         * 
+         * @param array $data Tableau associatif contenant les données à insérer.
+         *                    Les clés du tableau doivent correspondre aux noms des colonnes de la table.
+         * ex: $user->insert(['name' => 'John Doe', 'date' => '2021-01-01']);
+         * @return bool Retourne false après l'exécution de la requête.
+         */        
         public function insert($data) {
             
             // Vérifie si la propriété allowedColumns est définie et non vide
@@ -138,8 +152,15 @@
         }
 
 
-
-        // Méthode pour mettre à jour un enregistrement existant
+        /**
+         * Méthode pour mettre à jour un enregistrement existant dans la base de données.
+         *
+         * @param int|string $id L'identifiant de l'enregistrement à mettre à jour.
+         * @param array $data Les données à mettre à jour sous forme de tableau associatif (colonne => valeur).
+         * @param string $id_column Le nom de la colonne de l'identifiant (par défaut 'id').
+         * ex: $user->update(1, ['name' => 'John Doe', 'email' => '
+         * @return bool Retourne false après l'exécution de la requête.
+         */
         public function update($id, $data, $id_column = 'id') {
             
             // Vérifie si la propriété allowedColumns est définie et non vide
@@ -178,7 +199,14 @@
         }
 
 
-        // Méthode pour supprimer un enregistrement
+        /**
+         * Supprime un enregistrement de la base de données.
+         *
+         * @param int|string $id L'identifiant de l'enregistrement à supprimer.
+         * @param string $id_column Le nom de la colonne de l'identifiant (par défaut 'id').
+         * ex: $user->delete(1);
+         * @return bool Retourne false après l'exécution de la requête.
+         */
         public function delete($id, $id_column = 'id') {
 
             // Création de la condition de suppression
@@ -210,7 +238,12 @@
             return $this->primaryKey ?? "id";
         }
 
-
+        /**
+         * Valide les données en fonction des règles de validation définies dans le modèle.
+         *
+         * @param array $data Données à valider sous forme de tableau associatif (colonne => valeur).
+         * @return bool Retourne true si les données sont valides, sinon false.
+         */
         public function validate($data){
 
             $this->errors = [];
